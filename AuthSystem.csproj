@@ -77,6 +77,7 @@
       <DependentUpon>Context.tt</DependentUpon>
     </Compile>
     <Compile Include="Facade\AuthFacade.cs" />
+    <Compile Include="Security\SecurityService.cs" />
     <Compile Include="Service\AccountService.cs" />
     <Compile Include="Service\RoleService.cs" />
     <Compile Include="Util\Constants\AppConstant.cs" />

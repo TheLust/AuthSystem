@@ -4,10 +4,10 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5bb11fc841034bdfa4d4f77587dd29d7" Name="Diagram1">
-        <EntityTypeShape EntityType="AuthSystemModel.Account" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="AuthSystemModel.Role" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
-        <AssociationConnector Association="AuthSystemModel.FK__Account__Role__3B75D760" ManuallyRouted="false" />
+      <Diagram DiagramId="1cf61d0e00d548a9aa0a49b61e9f0f26" Name="Diagram1">
+        <EntityTypeShape EntityType="Context.Account" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="Context.Role" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
+        <AssociationConnector Association="Context.FK__Account__Role__3B75D760" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

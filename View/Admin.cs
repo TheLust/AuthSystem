@@ -156,62 +156,83 @@ namespace AuthSystem.View
             }
         }
 
-        private bool ValidateAccount(Account account)
+        private bool ValidateAccount(Account newAccount)
         {
             bool valid = true;
 
-            if (string.IsNullOrWhiteSpace(account.Username))
+            if (string.IsNullOrWhiteSpace(newAccount.Username))
             {
                 UsernameError.Text = AppConstant.GetExceptionMessage("Username", AppConstant.NOT_BLANK);
                 valid = false;
             }
-            else if (authFacade.UsernameExists(account.Username))
+            else
             {
-                UsernameError.Text = AppConstant.GetExceptionMessage("Account", "username", AppConstant.ALREADY_EXISTS);
-                valid = false;
+                try
+                {
+                    if (selectedAccount.Id != accountService.FindByUsername(newAccount.Username).Id)
+                    {
+                        UsernameError.Text = AppConstant.GetExceptionMessage("Account", "username", AppConstant.ALREADY_EXISTS);
+                        valid = false;
+                    }
+                }
+                catch { }
             }
 
-            if (string.IsNullOrWhiteSpace(account.Password))
+            if (string.IsNullOrWhiteSpace(newAccount.Password))
             {
                 PasswordError.Text = AppConstant.GetExceptionMessage("Password", AppConstant.NOT_BLANK);
                 valid = false;
             }
 
-            if (string.IsNullOrWhiteSpace(account.FirstName))
+            if (string.IsNullOrWhiteSpace(newAccount.FirstName))
             {
                 FirstNameError.Text = AppConstant.GetExceptionMessage("First name", AppConstant.NOT_BLANK);
                 valid = false;
             }
 
-            if (string.IsNullOrWhiteSpace(account.LastName))
+            if (string.IsNullOrWhiteSpace(newAccount.LastName))
             {
                 LastNameError.Text = AppConstant.GetExceptionMessage("Last name", AppConstant.NOT_BLANK);
                 valid = false;
             }
 
-            if (string.IsNullOrWhiteSpace(account.Email))
+            if (string.IsNullOrWhiteSpace(newAccount.Email))
             {
                 EmailError.Text = AppConstant.GetExceptionMessage("Email", AppConstant.NOT_BLANK);
                 valid = false;
             }
-            else if (authFacade.EmailExists(account.Email))
+            else
             {
-                EmailError.Text = AppConstant.GetExceptionMessage("Account", "email", AppConstant.ALREADY_EXISTS);
-                valid = false;
+                try
+                {
+                    if (selectedAccount.Id != accountService.FindByEmail(newAccount.Email).Id)
+                    {
+                        EmailError.Text = AppConstant.GetExceptionMessage("Account", "email", AppConstant.ALREADY_EXISTS);
+                        valid = false;
+                    }
+                }
+                catch { }
             }
 
-            if (string.IsNullOrWhiteSpace(account.PhoneNumber))
+            if (string.IsNullOrWhiteSpace(newAccount.PhoneNumber))
             {
                 PhoneNumberError.Text = AppConstant.GetExceptionMessage("Phone number", AppConstant.NOT_BLANK);
                 valid = false;
             }
-            else if (authFacade.PhoneNumberExists(account.PhoneNumber))
+            else
             {
-                PhoneNumberError.Text = AppConstant.GetExceptionMessage("Account", "phone number", AppConstant.ALREADY_EXISTS);
-                valid = false;
+                try
+                {
+                    if (selectedAccount.Id != accountService.FindByPhoneNumber(newAccount.PhoneNumber).Id)
+                    {
+                        PhoneNumberError.Text = AppConstant.GetExceptionMessage("Account", "phone number", AppConstant.ALREADY_EXISTS);
+                        valid = false;
+                    }
+                }
+                catch { }
             }
 
-            if (account.Role <= 0)
+            if (newAccount.Role <= 0)
             {
                 RoleError.Text = AppConstant.GetExceptionMessage("Role", AppConstant.NOT_NULL);
                 valid = false;
@@ -299,15 +320,16 @@ namespace AuthSystem.View
             {
                 return;
             }
+            accountService.Add(account);
 
-            try
+            /*try
             {
                 accountService.Add(account);
             } catch (Exception)
             {
                 MessageBox.Show("Something went wrong");
                 return;
-            }
+            }*/
 
             SetDataSource();
             SaveMode(false);

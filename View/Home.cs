@@ -8,11 +8,11 @@ namespace AuthSystem.View
     public partial class Home : Form
     {
 
-        private Account account;
+        private static Account account;
 
         public Home(Account account)
         {
-            this.account = account;
+            Home.account = account;
             InitializeComponent();
             WelcomeMessage.Text = AppConstant.WELCOME + account.FirstName;
 
@@ -45,6 +45,11 @@ namespace AuthSystem.View
         private void MenuButton_Click(object sender, System.EventArgs e)
         {
             Menu.Show(PointToScreen(new Point(0, 0)));
+        }
+
+        public static void SetAccount(Account account)
+        {
+            Home.account = account;
         }
     }
 }

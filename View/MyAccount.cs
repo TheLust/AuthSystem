@@ -1,4 +1,5 @@
 ﻿using AuthSystem.Context;
+using AuthSystem.Security;
 using AuthSystem.Util.Constants;
 using System;
 using System.Windows.Forms;
@@ -66,6 +67,7 @@ namespace AuthSystem.View
             account = accountService.FindById(account.Id);
             FillForm();
             UpdateMode(false);
+            Home.SetAccount(account);
         }
 
         private void CancelButton_Click(object sender, EventArgs e)

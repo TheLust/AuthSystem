@@ -1,4 +1,5 @@
 ﻿using AuthSystem.Context;
+using AuthSystem.Security;
 using AuthSystem.Service;
 using AuthSystem.Util.Constants;
 using System;
