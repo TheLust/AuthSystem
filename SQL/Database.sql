@@ -1,0 +1,60 @@
+﻿-- INIT
+
+USE MASTER;
+
+GO
+
+DROP DATABASE IF EXISTS AuthSystem;
+
+GO
+
+CREATE DATABASE AuthSystem;
+
+GO
+
+USE AuthSystem;
+
+GO
+
+-- TABLES
+
+CREATE TABLE "Role" (
+	Id INT IDENTITY(1, 1) PRIMARY KEY,
+	"Name" VARCHAR(50) UNIQUE NOT NULL
+);
+
+GO
+
+CREATE TABLE Account (
+	Id INT IDENTITY(1, 1) PRIMARY KEY,
+	Username VARCHAR(50) UNIQUE NOT NULL,
+	"Password" VARCHAR(50) NOT NULL,
+	FirstName VARCHAR(50) NOT NULL,
+	LastName VARCHAR(50) NOT NULL,
+	Email VARCHAR(50) NOT NULL,
+	PhoneNumber VARCHAR(15) NOT NULL,
+	"Role" INT FOREIGN KEY REFERENCES "Role"(Id) NOT NULL
+);
+
+GO
+
+ -- INSERTS
+
+INSERT INTO "Role" VALUES
+	('User'),
+	('Admin');
+
+GO
+
+INSERT INTO Account VALUES
+	('admin', 'admin', 'Admin', 'Admin', 'admin@admin.admin', '069696969', (SELECT id FROM "Role" WHERE "Name" = 'Admin'))
+
+GO
+
+-- SELECTS
+
+SELECT * FROM "Role";
+
+GO
+
+SELECT * FROM Account;
