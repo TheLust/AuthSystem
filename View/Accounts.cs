@@ -15,11 +15,13 @@ using System.Windows.Forms;
 
 namespace AuthSystem.View
 {
-    public partial class Admin : Form
+    public partial class Accounts : Form
     {
         private AuthFacade authFacade;
 
         private AccountService accountService;
+
+        private EmployeeService employeeService;
 
         private RoleService roleService;
 
@@ -27,10 +29,11 @@ namespace AuthSystem.View
 
         private bool GridEventEnabled = true;
 
-        public Admin()
+        public Accounts()
         {
             authFacade = new AuthFacade();
             accountService = new AccountService();
+            employeeService = new EmployeeService();
             roleService = new RoleService();
             InitializeComponent();
             SetDataSource();
@@ -54,7 +57,7 @@ namespace AuthSystem.View
                                    account.LastName,
                                    account.Email,
                                    account.PhoneNumber,
-                                   Role = account.Role1.Name
+                                   Role = account.Role.Name
                                }).ToList();
         }
 
@@ -66,7 +69,7 @@ namespace AuthSystem.View
             LastNameTextBox.Text = selectedAccount.LastName;
             EmailTextBox.Text = selectedAccount.Email;
             PhoneNumberTextBox.Text = selectedAccount.PhoneNumber;
-            RoleComboBox.SelectedValue = selectedAccount.Role;
+            RoleComboBox.SelectedValue = selectedAccount.RoleId;
         }
 
         private void InitializeRoles()
@@ -232,9 +235,15 @@ namespace AuthSystem.View
                 catch { }
             }
 
-            if (newAccount.Role <= 0)
+            if (newAccount.RoleId <= 0)
             {
                 RoleError.Text = AppConstant.GetExceptionMessage("Role", AppConstant.NOT_NULL);
+                valid = false;
+            }
+
+            if (newAccount.Employee.JobId <= 0)
+            {
+                RoleError.Text = AppConstant.GetExceptionMessage("Job", AppConstant.NOT_NULL);
                 valid = false;
             }
 
@@ -251,7 +260,7 @@ namespace AuthSystem.View
                 LastName = LastNameTextBox.Text,
                 Email = EmailTextBox.Text,
                 PhoneNumber = PhoneNumberTextBox.Text,
-                Role = RoleComboBox.SelectedValue != null ? (int)RoleComboBox.SelectedValue : 0
+                RoleId = RoleComboBox.SelectedValue != null ? (int)RoleComboBox.SelectedValue : 0
             };
 
             return account;

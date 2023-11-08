@@ -4,10 +4,26 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1cf61d0e00d548a9aa0a49b61e9f0f26" Name="Diagram1">
-        <EntityTypeShape EntityType="Context.Account" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="Context.Role" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
-        <AssociationConnector Association="Context.FK__Account__Role__3B75D760" ManuallyRouted="false" />
+      <Diagram DiagramId="f0598a9ee63647699481d317725a40ab" Name="Diagram1">
+        <EntityTypeShape EntityType="AuthSystemModel.Account" Width="1.5" PointX="9.625" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AuthSystemModel.Assignment" Width="1.5" PointX="0.5" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="AuthSystemModel.Employee" Width="1.5" PointX="5.875" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AuthSystemModel.ExtraPayment" Width="1.5" PointX="5.75" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="AuthSystemModel.Job" Width="1.5" PointX="3.25" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AuthSystemModel.Project" Width="1.5" PointX="0.5" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AuthSystemModel.Role" Width="1.5" PointX="7.625" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="AuthSystemModel.Session" Width="1.5" PointX="8.375" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AuthSystemModel.Wage" Width="1.5" PointX="3.5" PointY="3.625" IsExpanded="true" />
+        <AssociationConnector Association="AuthSystemModel.FK__Account__RoleId__412EB0B6" ManuallyRouted="false" />
+        <AssociationConnector Association="AuthSystemModel.FK__Employee__Id__440B1D61" ManuallyRouted="false" />
+        <AssociationConnector Association="AuthSystemModel.FK__Assignmen__Emplo__5070F446" ManuallyRouted="false" />
+        <AssociationConnector Association="AuthSystemModel.FK__Assignmen__Proje__5165187F" ManuallyRouted="false" >
+        </AssociationConnector>
+        <AssociationConnector Association="AuthSystemModel.FK__Session__Assignm__5441852A" ManuallyRouted="false" />
+        <AssociationConnector Association="AuthSystemModel.FK__Employee__JobId__44FF419A" ManuallyRouted="false" />
+        <AssociationConnector Association="AuthSystemModel.FK__ExtraPaym__Emplo__48CFD27E" ManuallyRouted="false" />
+        <AssociationConnector Association="AuthSystemModel.FK__Wage__JobId__4CA06362" ManuallyRouted="false" />
+        <AssociationConnector Association="AuthSystemModel.FK__Wage__ProjectId__4D94879B" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

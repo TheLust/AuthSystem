@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Context.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="AuthSystemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Account">
           <Key>
             <PropertyRef Name="Id" />
@@ -16,7 +16,49 @@
           <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Email" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="PhoneNumber" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="Role" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Assignment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeId" Type="int" Nullable="false" />
+          <Property Name="ProjectId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="JobId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ExtraPayment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Amount" Type="float" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="7" Nullable="false" />
+          <Property Name="Month" Type="date" />
+          <Property Name="Achievement" Type="varchar" MaxLength="255" />
+          <Property Name="EmployeeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Job">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Rank" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="BaseSalary" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -25,7 +67,25 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <Association Name="FK__Account__Role__3B75D760">
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AssignmentId" Type="int" Nullable="false" />
+          <Property Name="Start" Type="datetime" Nullable="false" />
+          <Property Name="End" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Wage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="JobId" Type="int" Nullable="false" />
+          <Property Name="ProjectId" Type="int" />
+          <Property Name="Amount" Type="float" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Account__RoleId__412EB0B6">
           <End Role="Role" Type="Self.Role" Multiplicity="1" />
           <End Role="Account" Type="Self.Account" Multiplicity="*" />
           <ReferentialConstraint>
@@ -33,23 +93,158 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Account">
-              <PropertyRef Name="Role" />
+              <PropertyRef Name="RoleId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="ContextStoreContainer">
+        <Association Name="FK__Assignmen__Emplo__5070F446">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Assignment" Type="Self.Assignment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Assignment">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Assignmen__Proje__5165187F">
+          <End Role="Project" Type="Self.Project" Multiplicity="1" />
+          <End Role="Assignment" Type="Self.Assignment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Assignment">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Employee__Id__440B1D61">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Employee__JobId__44FF419A">
+          <End Role="Job" Type="Self.Job" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="JobId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ExtraPaym__Emplo__48CFD27E">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="ExtraPayment" Type="Self.ExtraPayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExtraPayment">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Session__Assignm__5441852A">
+          <End Role="Assignment" Type="Self.Assignment" Multiplicity="1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Assignment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="AssignmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Wage__JobId__4CA06362">
+          <End Role="Job" Type="Self.Job" Multiplicity="1" />
+          <End Role="Wage" Type="Self.Wage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Wage">
+              <PropertyRef Name="JobId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Wage__ProjectId__4D94879B">
+          <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
+          <End Role="Wage" Type="Self.Wage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Wage">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AuthSystemModelStoreContainer">
           <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Assignment" EntityType="Self.Assignment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExtraPayment" EntityType="Self.ExtraPayment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Job" EntityType="Self.Job" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Account__Role__3B75D760" Association="Self.FK__Account__Role__3B75D760">
+          <EntitySet Name="Session" EntityType="Self.Session" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Wage" EntityType="Self.Wage" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Account__RoleId__412EB0B6" Association="Self.FK__Account__RoleId__412EB0B6">
             <End Role="Role" EntitySet="Role" />
             <End Role="Account" EntitySet="Account" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Assignmen__Emplo__5070F446" Association="Self.FK__Assignmen__Emplo__5070F446">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Assignment" EntitySet="Assignment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Assignmen__Proje__5165187F" Association="Self.FK__Assignmen__Proje__5165187F">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="Assignment" EntitySet="Assignment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Employee__Id__440B1D61" Association="Self.FK__Employee__Id__440B1D61">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Employee__JobId__44FF419A" Association="Self.FK__Employee__JobId__44FF419A">
+            <End Role="Job" EntitySet="Job" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ExtraPaym__Emplo__48CFD27E" Association="Self.FK__ExtraPaym__Emplo__48CFD27E">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="ExtraPayment" EntitySet="ExtraPayment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Session__Assignm__5441852A" Association="Self.FK__Session__Assignm__5441852A">
+            <End Role="Assignment" EntitySet="Assignment" />
+            <End Role="Session" EntitySet="Session" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Wage__JobId__4CA06362" Association="Self.FK__Wage__JobId__4CA06362">
+            <End Role="Job" EntitySet="Job" />
+            <End Role="Wage" EntitySet="Wage" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Wage__ProjectId__4D94879B" Association="Self.FK__Wage__ProjectId__4D94879B">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="Wage" EntitySet="Wage" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="Context" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="AuthSystemModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Account">
           <Key>
             <PropertyRef Name="Id" />
@@ -61,8 +256,63 @@
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="PhoneNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Role" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Role1" Relationship="Self.FK__Account__Role__3B75D760" FromRole="Account" ToRole="Role" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Role" Relationship="Self.FK__Account__RoleId__412EB0B6" FromRole="Account" ToRole="Role" />
+          <NavigationProperty Name="Employee" Relationship="Self.FK__Employee__Id__440B1D61" FromRole="Account" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="Assignment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeId" Type="Int32" Nullable="false" />
+          <Property Name="ProjectId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Employee" Relationship="Self.FK__Assignmen__Emplo__5070F446" FromRole="Assignment" ToRole="Employee" />
+          <NavigationProperty Name="Project" Relationship="Self.FK__Assignmen__Proje__5165187F" FromRole="Assignment" ToRole="Project" />
+          <NavigationProperty Name="Sessions" Relationship="Self.FK__Session__Assignm__5441852A" FromRole="Assignment" ToRole="Session" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="JobId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Account" Relationship="Self.FK__Employee__Id__440B1D61" FromRole="Employee" ToRole="Account" />
+          <NavigationProperty Name="Assignments" Relationship="Self.FK__Assignmen__Emplo__5070F446" FromRole="Employee" ToRole="Assignment" />
+          <NavigationProperty Name="Job" Relationship="Self.FK__Employee__JobId__44FF419A" FromRole="Employee" ToRole="Job" />
+          <NavigationProperty Name="ExtraPayments" Relationship="Self.FK__ExtraPaym__Emplo__48CFD27E" FromRole="Employee" ToRole="ExtraPayment" />
+        </EntityType>
+        <EntityType Name="ExtraPayment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Amount" Type="Double" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="7" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Month" Type="DateTime" Precision="0" />
+          <Property Name="Achievement" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="EmployeeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Employee" Relationship="Self.FK__ExtraPaym__Emplo__48CFD27E" FromRole="ExtraPayment" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="Job">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Rank" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BaseSalary" Type="Double" Nullable="false" />
+          <NavigationProperty Name="Employees" Relationship="Self.FK__Employee__JobId__44FF419A" FromRole="Job" ToRole="Employee" />
+          <NavigationProperty Name="Wages" Relationship="Self.FK__Wage__JobId__4CA06362" FromRole="Job" ToRole="Wage" />
+        </EntityType>
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Assignments" Relationship="Self.FK__Assignmen__Proje__5165187F" FromRole="Project" ToRole="Assignment" />
+          <NavigationProperty Name="Wages" Relationship="Self.FK__Wage__ProjectId__4D94879B" FromRole="Project" ToRole="Wage" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -70,9 +320,30 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Accounts" Relationship="Self.FK__Account__Role__3B75D760" FromRole="Role" ToRole="Account" />
+          <NavigationProperty Name="Accounts" Relationship="Self.FK__Account__RoleId__412EB0B6" FromRole="Role" ToRole="Account" />
         </EntityType>
-        <Association Name="FK__Account__Role__3B75D760">
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AssignmentId" Type="Int32" Nullable="false" />
+          <Property Name="Start" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="End" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Assignment" Relationship="Self.FK__Session__Assignm__5441852A" FromRole="Session" ToRole="Assignment" />
+        </EntityType>
+        <EntityType Name="Wage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="JobId" Type="Int32" Nullable="false" />
+          <Property Name="ProjectId" Type="Int32" />
+          <Property Name="Amount" Type="Double" Nullable="false" />
+          <NavigationProperty Name="Job" Relationship="Self.FK__Wage__JobId__4CA06362" FromRole="Wage" ToRole="Job" />
+          <NavigationProperty Name="Project" Relationship="Self.FK__Wage__ProjectId__4D94879B" FromRole="Wage" ToRole="Project" />
+        </EntityType>
+        <Association Name="FK__Account__RoleId__412EB0B6">
           <End Role="Role" Type="Self.Role" Multiplicity="1" />
           <End Role="Account" Type="Self.Account" Multiplicity="*" />
           <ReferentialConstraint>
@@ -80,16 +351,151 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Account">
-              <PropertyRef Name="Role" />
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Employee__Id__440B1D61">
+          <End Role="Account" Type="Self.Account" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Assignmen__Emplo__5070F446">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Assignment" Type="Self.Assignment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Assignment">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Assignmen__Proje__5165187F">
+          <End Role="Project" Type="Self.Project" Multiplicity="1" />
+          <End Role="Assignment" Type="Self.Assignment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Assignment">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Session__Assignm__5441852A">
+          <End Role="Assignment" Type="Self.Assignment" Multiplicity="1" />
+          <End Role="Session" Type="Self.Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Assignment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="AssignmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Employee__JobId__44FF419A">
+          <End Role="Job" Type="Self.Job" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="JobId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ExtraPaym__Emplo__48CFD27E">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="ExtraPayment" Type="Self.ExtraPayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExtraPayment">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Wage__JobId__4CA06362">
+          <End Role="Job" Type="Self.Job" Multiplicity="1" />
+          <End Role="Wage" Type="Self.Wage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Wage">
+              <PropertyRef Name="JobId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Wage__ProjectId__4D94879B">
+          <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
+          <End Role="Wage" Type="Self.Wage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Wage">
+              <PropertyRef Name="ProjectId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="AuthSystemEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Accounts" EntityType="Self.Account" />
+          <EntitySet Name="Assignments" EntityType="Self.Assignment" />
+          <EntitySet Name="Employees" EntityType="Self.Employee" />
+          <EntitySet Name="ExtraPayments" EntityType="Self.ExtraPayment" />
+          <EntitySet Name="Jobs" EntityType="Self.Job" />
+          <EntitySet Name="Projects" EntityType="Self.Project" />
           <EntitySet Name="Roles" EntityType="Self.Role" />
-          <AssociationSet Name="FK__Account__Role__3B75D760" Association="Self.FK__Account__Role__3B75D760">
+          <EntitySet Name="Sessions" EntityType="Self.Session" />
+          <EntitySet Name="Wages" EntityType="Self.Wage" />
+          <AssociationSet Name="FK__Account__RoleId__412EB0B6" Association="Self.FK__Account__RoleId__412EB0B6">
             <End Role="Role" EntitySet="Roles" />
             <End Role="Account" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Employee__Id__440B1D61" Association="Self.FK__Employee__Id__440B1D61">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Assignmen__Emplo__5070F446" Association="Self.FK__Assignmen__Emplo__5070F446">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Assignment" EntitySet="Assignments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Assignmen__Proje__5165187F" Association="Self.FK__Assignmen__Proje__5165187F">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="Assignment" EntitySet="Assignments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Session__Assignm__5441852A" Association="Self.FK__Session__Assignm__5441852A">
+            <End Role="Assignment" EntitySet="Assignments" />
+            <End Role="Session" EntitySet="Sessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Employee__JobId__44FF419A" Association="Self.FK__Employee__JobId__44FF419A">
+            <End Role="Job" EntitySet="Jobs" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ExtraPaym__Emplo__48CFD27E" Association="Self.FK__ExtraPaym__Emplo__48CFD27E">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="ExtraPayment" EntitySet="ExtraPayments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Wage__JobId__4CA06362" Association="Self.FK__Wage__JobId__4CA06362">
+            <End Role="Job" EntitySet="Jobs" />
+            <End Role="Wage" EntitySet="Wages" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Wage__ProjectId__4D94879B" Association="Self.FK__Wage__ProjectId__4D94879B">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="Wage" EntitySet="Wages" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -97,9 +503,9 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ContextStoreContainer" CdmEntityContainer="AuthSystemEntities">
+        <EntityContainerMapping StorageEntityContainer="AuthSystemModelStoreContainer" CdmEntityContainer="AuthSystemEntities">
           <EntitySetMapping Name="Accounts">
-            <EntityTypeMapping TypeName="Context.Account">
+            <EntityTypeMapping TypeName="AuthSystemModel.Account">
               <MappingFragment StoreEntitySet="Account">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
@@ -108,15 +514,82 @@
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Assignments">
+            <EntityTypeMapping TypeName="AuthSystemModel.Assignment">
+              <MappingFragment StoreEntitySet="Assignment">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="AuthSystemModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="JobId" ColumnName="JobId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExtraPayments">
+            <EntityTypeMapping TypeName="AuthSystemModel.ExtraPayment">
+              <MappingFragment StoreEntitySet="ExtraPayment">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Month" ColumnName="Month" />
+                <ScalarProperty Name="Achievement" ColumnName="Achievement" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Jobs">
+            <EntityTypeMapping TypeName="AuthSystemModel.Job">
+              <MappingFragment StoreEntitySet="Job">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Rank" ColumnName="Rank" />
+                <ScalarProperty Name="BaseSalary" ColumnName="BaseSalary" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Projects">
+            <EntityTypeMapping TypeName="AuthSystemModel.Project">
+              <MappingFragment StoreEntitySet="Project">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Roles">
-            <EntityTypeMapping TypeName="Context.Role">
+            <EntityTypeMapping TypeName="AuthSystemModel.Role">
               <MappingFragment StoreEntitySet="Role">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sessions">
+            <EntityTypeMapping TypeName="AuthSystemModel.Session">
+              <MappingFragment StoreEntitySet="Session">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AssignmentId" ColumnName="AssignmentId" />
+                <ScalarProperty Name="Start" ColumnName="Start" />
+                <ScalarProperty Name="End" ColumnName="End" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Wages">
+            <EntityTypeMapping TypeName="AuthSystemModel.Wage">
+              <MappingFragment StoreEntitySet="Wage">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="JobId" ColumnName="JobId" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

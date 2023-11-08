@@ -37,6 +37,12 @@ namespace AuthSystem.Facade
             return foundAccount;
         }
 
+        public void Register(Account account)
+        {
+            account.RoleId = roleService.FindUserRole().Id;
+            accountService.Add(account);
+        }
+
         public bool UsernameExists(string username)
         {
             try
@@ -76,12 +82,6 @@ namespace AuthSystem.Facade
             }
 
             return true;
-        }
-
-        public void Register(Account account)
-        {
-            account.Role = roleService.FindUserRole().Id;
-            accountService.Add(account);
         }
     }
 }

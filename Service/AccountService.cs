@@ -118,7 +118,7 @@ namespace AuthSystem
             existingAccount.LastName = account.LastName;
             existingAccount.Email = SecurityService.Encrypt(account.Email);
             existingAccount.PhoneNumber = SecurityService.Encrypt(account.PhoneNumber);
-            existingAccount.Role = account.Role != 0 ? account.Role : existingAccount.Role;
+            existingAccount.RoleId= account.RoleId != 0 ? account.RoleId : existingAccount.RoleId;
 
             context.SaveChanges();
         }
@@ -146,8 +146,8 @@ namespace AuthSystem
             mappedAccount.LastName = account.LastName;
             mappedAccount.Email = SecurityService.Decrypt(account.Email);
             mappedAccount.PhoneNumber = SecurityService.Decrypt(account.PhoneNumber);
+            mappedAccount.RoleId = account.RoleId;
             mappedAccount.Role = account.Role;
-            mappedAccount.Role1 = account.Role1;
 
             return mappedAccount;
         }

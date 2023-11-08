@@ -1,6 +1,6 @@
 ﻿namespace AuthSystem.View
 {
-    partial class Admin
+    partial class Accounts
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Admin));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Accounts));
             this.Grid = new System.Windows.Forms.DataGridView();
             this.AddButton = new System.Windows.Forms.Button();
             this.AccountPanel = new System.Windows.Forms.Panel();
@@ -514,7 +514,7 @@
             this.CancelSaveButton.Visible = false;
             this.CancelSaveButton.Click += new System.EventHandler(this.CancelSaveButton_Click);
             // 
-            // Admin
+            // Accounts
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -530,9 +530,9 @@
             this.Controls.Add(this.AddButton);
             this.Controls.Add(this.Grid);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Admin";
+            this.Name = "Accounts";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Admin";
+            this.Text = "Accounts";
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).EndInit();
             this.AccountPanel.ResumeLayout(false);
             this.panel1.ResumeLayout(false);

@@ -26,6 +26,13 @@ namespace AuthSystem.Context
         }
     
         public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<Assignment> Assignments { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<ExtraPayment> ExtraPayments { get; set; }
+        public virtual DbSet<Job> Jobs { get; set; }
+        public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Session> Sessions { get; set; }
+        public virtual DbSet<Wage> Wages { get; set; }
     }
 }

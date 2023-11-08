@@ -16,14 +16,84 @@ namespace AuthSystem.View
             InitializeComponent();
             WelcomeMessage.Text = AppConstant.WELCOME + account.FirstName;
 
-            if (account.Role1.Name.Equals("Admin"))
+            if (account.Role.Name.Equals("Admin"))
             {
-                ToolStripItem adminLink = Menu.Items.Add("Admin");
-                adminLink.Click += AdminLink_Click;
+                ToolStripMenuItem adminLink = new ToolStripMenuItem("Admin");
+                ToolStripItem accountLink = adminLink.DropDownItems.Add("Accounts");
+                accountLink.Click += AccountLink_Click;
+                ToolStripItem employeeLink = adminLink.DropDownItems.Add("Employees");
+                employeeLink.Click += EmployeeLink_Click;
+                ToolStripItem projectLink = adminLink.DropDownItems.Add("Projects");
+                projectLink.Click += ProjectLink_Click;
+                Menu.Items.Add(adminLink);
             }
 
             ToolStripItem myAccount = Menu.Items.Add("My Account");
             myAccount.Click += MyAccount_Click;
+        }
+
+        private void SessionLink_Click(object sender, System.EventArgs e)
+        {
+            Sessions sessionView = new Sessions();
+            Hide();
+            sessionView.ShowDialog();
+            Show();
+        }
+
+        private void BonusLink_Click(object sender, System.EventArgs e)
+        {
+            Bonuses bonusView = new Bonuses();
+            Hide();
+            bonusView.ShowDialog();
+            Show();
+        }
+
+        private void WageLink_Click(object sender, System.EventArgs e)
+        {
+            Wages wageView = new Wages();
+            Hide();
+            wageView.ShowDialog();
+            Show();
+        }
+
+        private void AssignmentLink_Click(object sender, System.EventArgs e)
+        {
+            Assignments assignmentView = new Assignments();
+            Hide();
+            assignmentView.ShowDialog();
+            Show();
+        }
+
+        private void JobLink_Click(object sender, System.EventArgs e)
+        {
+            Jobs jobView = new Jobs();
+            Hide();
+            jobView.ShowDialog();
+            Show();
+        }
+
+        private void ProjectLink_Click(object sender, System.EventArgs e)
+        {
+            Projects projectView = new Projects();
+            Hide();
+            projectView.ShowDialog();
+            Show();
+        }
+
+        private void EmployeeLink_Click(object sender, System.EventArgs e)
+        {
+            Employees employeeView = new Employees();
+            Hide();
+            employeeView.ShowDialog();
+            Show();
+        }
+
+        private void AccountLink_Click(object sender, System.EventArgs e)
+        {
+            Accounts accountView = new Accounts();
+            Hide();
+            accountView.ShowDialog();
+            Show();
         }
 
         private void MyAccount_Click(object sender, System.EventArgs e)
@@ -31,14 +101,6 @@ namespace AuthSystem.View
             MyAccount myAccount = new MyAccount(account);
             Hide();
             myAccount.ShowDialog();
-            Show();
-        }
-
-        private void AdminLink_Click(object sender, System.EventArgs e)
-        {
-            Admin adminView = new Admin();
-            Hide();
-            adminView.ShowDialog();
             Show();
         }
 

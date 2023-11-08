@@ -101,7 +101,7 @@
             // Menu
             // 
             this.Menu.Name = "Menu";
-            this.Menu.Size = new System.Drawing.Size(61, 4);
+            this.Menu.Size = new System.Drawing.Size(181, 26);
             // 
             // Home
             // 

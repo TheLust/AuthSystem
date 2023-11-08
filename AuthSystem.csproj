@@ -58,6 +58,9 @@
     <Compile Include="Context\Account.cs">
       <DependentUpon>Context.tt</DependentUpon>
     </Compile>
+    <Compile Include="Context\Assignment.cs">
+      <DependentUpon>Context.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\Context.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -73,25 +76,69 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Context.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Context\Employee.cs">
+      <DependentUpon>Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\ExtraPayment.cs">
+      <DependentUpon>Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\Job.cs">
+      <DependentUpon>Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\Project.cs">
+      <DependentUpon>Context.tt</DependentUpon>
+    </Compile>
     <Compile Include="Context\Role.cs">
+      <DependentUpon>Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\Session.cs">
+      <DependentUpon>Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Context\Wage.cs">
       <DependentUpon>Context.tt</DependentUpon>
     </Compile>
     <Compile Include="Facade\AuthFacade.cs" />
     <Compile Include="Security\SecurityService.cs" />
     <Compile Include="Service\AccountService.cs" />
+    <Compile Include="Service\EmployeeService.cs" />
+    <Compile Include="Service\JobService.cs" />
     <Compile Include="Service\RoleService.cs" />
     <Compile Include="Util\Constants\AppConstant.cs" />
-    <Compile Include="View\Admin.cs">
+    <Compile Include="View\Accounts.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\Admin.Designer.cs">
-      <DependentUpon>Admin.cs</DependentUpon>
+    <Compile Include="View\Accounts.Designer.cs">
+      <DependentUpon>Accounts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Assignments.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Assignments.Designer.cs">
+      <DependentUpon>Assignments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Bonuses.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Bonuses.Designer.cs">
+      <DependentUpon>Bonuses.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Employees.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Employees.Designer.cs">
+      <DependentUpon>Employees.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Home.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Home.Designer.cs">
       <DependentUpon>Home.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Jobs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Jobs.Designer.cs">
+      <DependentUpon>Jobs.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Login.cs">
       <SubType>Form</SubType>
@@ -107,14 +154,32 @@
     <Compile Include="View\MyAccount.Designer.cs">
       <DependentUpon>MyAccount.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Projects.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Projects.Designer.cs">
+      <DependentUpon>Projects.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Register.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Register.Designer.cs">
       <DependentUpon>Register.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="View\Admin.resx">
-      <DependentUpon>Admin.cs</DependentUpon>
+    <Compile Include="View\Sessions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Sessions.Designer.cs">
+      <DependentUpon>Sessions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Wages.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Wages.Designer.cs">
+      <DependentUpon>Wages.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="View\Accounts.resx">
+      <DependentUpon>Accounts.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Home.resx">
       <DependentUpon>Home.cs</DependentUpon>
