@@ -3,14 +3,8 @@ using AuthSystem.Facade;
 using AuthSystem.Service;
 using AuthSystem.Util.Constants;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AuthSystem.View
@@ -20,8 +14,6 @@ namespace AuthSystem.View
         private AuthFacade authFacade;
 
         private AccountService accountService;
-
-        private EmployeeService employeeService;
 
         private RoleService roleService;
 
@@ -33,7 +25,6 @@ namespace AuthSystem.View
         {
             authFacade = new AuthFacade();
             accountService = new AccountService();
-            employeeService = new EmployeeService();
             roleService = new RoleService();
             InitializeComponent();
             SetDataSource();
@@ -165,7 +156,7 @@ namespace AuthSystem.View
 
             if (string.IsNullOrWhiteSpace(newAccount.Username))
             {
-                UsernameError.Text = AppConstant.GetExceptionMessage("Username", AppConstant.NOT_BLANK);
+                UsernameError.Text = AppConstant.GetExceptionMessage(AppConstant.USERNAME, AppConstant.NOT_BLANK);
                 valid = false;
             }
             else
@@ -174,7 +165,7 @@ namespace AuthSystem.View
                 {
                     if (selectedAccount.Id != accountService.FindByUsername(newAccount.Username).Id)
                     {
-                        UsernameError.Text = AppConstant.GetExceptionMessage("Account", "username", AppConstant.ALREADY_EXISTS);
+                        UsernameError.Text = AppConstant.GetExceptionMessage(AppConstant.ACCOUNT.Item1, AppConstant.USERNAME, AppConstant.ALREADY_EXISTS);
                         valid = false;
                     }
                 }
@@ -183,25 +174,25 @@ namespace AuthSystem.View
 
             if (string.IsNullOrWhiteSpace(newAccount.Password))
             {
-                PasswordError.Text = AppConstant.GetExceptionMessage("Password", AppConstant.NOT_BLANK);
+                PasswordError.Text = AppConstant.GetExceptionMessage(AppConstant.PASSWORD, AppConstant.NOT_BLANK);
                 valid = false;
             }
 
             if (string.IsNullOrWhiteSpace(newAccount.FirstName))
             {
-                FirstNameError.Text = AppConstant.GetExceptionMessage("First name", AppConstant.NOT_BLANK);
+                FirstNameError.Text = AppConstant.GetExceptionMessage(AppConstant.FIRST_NAME, AppConstant.NOT_BLANK);
                 valid = false;
             }
 
             if (string.IsNullOrWhiteSpace(newAccount.LastName))
             {
-                LastNameError.Text = AppConstant.GetExceptionMessage("Last name", AppConstant.NOT_BLANK);
+                LastNameError.Text = AppConstant.GetExceptionMessage(AppConstant.LAST_NAME, AppConstant.NOT_BLANK);
                 valid = false;
             }
 
             if (string.IsNullOrWhiteSpace(newAccount.Email))
             {
-                EmailError.Text = AppConstant.GetExceptionMessage("Email", AppConstant.NOT_BLANK);
+                EmailError.Text = AppConstant.GetExceptionMessage(AppConstant.EMAIL, AppConstant.NOT_BLANK);
                 valid = false;
             }
             else
@@ -210,7 +201,7 @@ namespace AuthSystem.View
                 {
                     if (selectedAccount.Id != accountService.FindByEmail(newAccount.Email).Id)
                     {
-                        EmailError.Text = AppConstant.GetExceptionMessage("Account", "email", AppConstant.ALREADY_EXISTS);
+                        EmailError.Text = AppConstant.GetExceptionMessage(AppConstant.ACCOUNT.Item1, AppConstant.EMAIL, AppConstant.ALREADY_EXISTS);
                         valid = false;
                     }
                 }
@@ -219,7 +210,7 @@ namespace AuthSystem.View
 
             if (string.IsNullOrWhiteSpace(newAccount.PhoneNumber))
             {
-                PhoneNumberError.Text = AppConstant.GetExceptionMessage("Phone number", AppConstant.NOT_BLANK);
+                PhoneNumberError.Text = AppConstant.GetExceptionMessage(AppConstant.PHONE_NUMBER, AppConstant.NOT_BLANK);
                 valid = false;
             }
             else
@@ -228,7 +219,7 @@ namespace AuthSystem.View
                 {
                     if (selectedAccount.Id != accountService.FindByPhoneNumber(newAccount.PhoneNumber).Id)
                     {
-                        PhoneNumberError.Text = AppConstant.GetExceptionMessage("Account", "phone number", AppConstant.ALREADY_EXISTS);
+                        PhoneNumberError.Text = AppConstant.GetExceptionMessage(AppConstant.ACCOUNT.Item1, AppConstant.PHONE_NUMBER, AppConstant.ALREADY_EXISTS);
                         valid = false;
                     }
                 }
@@ -237,13 +228,7 @@ namespace AuthSystem.View
 
             if (newAccount.RoleId <= 0)
             {
-                RoleError.Text = AppConstant.GetExceptionMessage("Role", AppConstant.NOT_NULL);
-                valid = false;
-            }
-
-            if (newAccount.Employee.JobId <= 0)
-            {
-                RoleError.Text = AppConstant.GetExceptionMessage("Job", AppConstant.NOT_NULL);
+                RoleError.Text = AppConstant.GetExceptionMessage(AppConstant.ROLE.Item1, AppConstant.NOT_NULL);
                 valid = false;
             }
 
@@ -329,16 +314,16 @@ namespace AuthSystem.View
             {
                 return;
             }
-            accountService.Add(account);
 
-            /*try
+            try
             {
                 accountService.Add(account);
-            } catch (Exception)
+            }
+            catch (Exception)
             {
-                MessageBox.Show("Something went wrong");
+                MessageBox.Show(AppConstant.ABSTRACT_ERROR_MESSGAE);
                 return;
-            }*/
+            }
 
             SetDataSource();
             SaveMode(false);
@@ -360,7 +345,7 @@ namespace AuthSystem.View
                 accountService.Update(selectedAccount.Id, account);
             } catch (Exception)
             {
-                MessageBox.Show("Something went wrong");
+                MessageBox.Show(AppConstant.ABSTRACT_ERROR_MESSGAE);
                 return;
             }
 
@@ -405,7 +390,7 @@ namespace AuthSystem.View
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete this account?", "Sure?", MessageBoxButtons.YesNo);
+            DialogResult dialogResult = MessageBox.Show(AppConstant.DELETE_CONFIRMATION, AppConstant.SURE, MessageBoxButtons.YesNo);
             
             if (dialogResult == DialogResult.No)
             {
@@ -417,7 +402,7 @@ namespace AuthSystem.View
                 accountService.Remove(selectedAccount);
             } catch (Exception) 
             {
-                MessageBox.Show("Something went wrong");
+                MessageBox.Show(AppConstant.ABSTRACT_ERROR_MESSGAE);
                 return;
             }
 

@@ -52,58 +52,58 @@ namespace AuthSystem.View
 
             if (string.IsNullOrWhiteSpace(account.Username))
             {
-                UsernameError.Text = AppConstant.GetExceptionMessage("Username", AppConstant.NOT_BLANK);
+                UsernameError.Text = AppConstant.GetExceptionMessage(AppConstant.USERNAME, AppConstant.NOT_BLANK);
                 valid = false;
             }
             else if (authFacade.UsernameExists(account.Username))
             {
-                UsernameError.Text = AppConstant.GetExceptionMessage("Account", "username", AppConstant.ALREADY_EXISTS);
+                UsernameError.Text = AppConstant.GetExceptionMessage(AppConstant.ACCOUNT.Item1, AppConstant.USERNAME, AppConstant.ALREADY_EXISTS);
                 valid = false;
             }
 
             if (string.IsNullOrWhiteSpace(account.Password))
             {
-                PasswordError.Text = AppConstant.GetExceptionMessage("Password", AppConstant.NOT_BLANK);
+                PasswordError.Text = AppConstant.GetExceptionMessage(AppConstant.PASSWORD, AppConstant.NOT_BLANK);
                 valid = false;
             }
 
             if (string.IsNullOrWhiteSpace(account.FirstName))
             {
-                FirstNameError.Text = AppConstant.GetExceptionMessage("First name", AppConstant.NOT_BLANK);
+                FirstNameError.Text = AppConstant.GetExceptionMessage(AppConstant.FIRST_NAME, AppConstant.NOT_BLANK);
                 valid = false;
             }
 
             if (string.IsNullOrWhiteSpace(account.LastName))
             {
-                LastNameError.Text = AppConstant.GetExceptionMessage("Last name", AppConstant.NOT_BLANK);
+                LastNameError.Text = AppConstant.GetExceptionMessage(AppConstant.LAST_NAME, AppConstant.NOT_BLANK);
                 valid = false;
             }
 
             if (string.IsNullOrWhiteSpace(account.Email))
             {
-                EmailError.Text = AppConstant.GetExceptionMessage("Email", AppConstant.NOT_BLANK);
+                EmailError.Text = AppConstant.GetExceptionMessage(AppConstant.EMAIL, AppConstant.NOT_BLANK);
                 valid = false;
             }
             else if (authFacade.EmailExists(account.Email))
             {
-                EmailError.Text = AppConstant.GetExceptionMessage("Account", "email", AppConstant.ALREADY_EXISTS);
+                EmailError.Text = AppConstant.GetExceptionMessage(AppConstant.ACCOUNT.Item1, AppConstant.EMAIL, AppConstant.ALREADY_EXISTS);
                 valid = false;
             }
 
             if (string.IsNullOrWhiteSpace(account.PhoneNumber))
             {
-                PhoneNumberError.Text = AppConstant.GetExceptionMessage("Phone number", AppConstant.NOT_BLANK);
+                PhoneNumberError.Text = AppConstant.GetExceptionMessage(AppConstant.PHONE_NUMBER, AppConstant.NOT_BLANK);
                 valid = false;
             }
             else if (authFacade.PhoneNumberExists(account.PhoneNumber))
             {
-                PhoneNumberError.Text = AppConstant.GetExceptionMessage("Account", "phone number", AppConstant.ALREADY_EXISTS);
+                PhoneNumberError.Text = AppConstant.GetExceptionMessage(AppConstant.ACCOUNT.Item1, AppConstant.PHONE_NUMBER, AppConstant.ALREADY_EXISTS);
                 valid = false;
             }
 
             if (!PrivacyPolicyCheckBox.Checked)
             {
-                PrivacyPolicyError.Text = "Please read our privacy policy";
+                PrivacyPolicyError.Text = AppConstant.PRIVACY_POLICY_MESSAGE;
                 valid = false;
             }
 

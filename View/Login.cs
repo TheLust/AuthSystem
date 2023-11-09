@@ -51,13 +51,13 @@ namespace AuthSystem
 
             if (string.IsNullOrWhiteSpace(account.Username))
             {
-                UsernameError.Text = AppConstant.GetExceptionMessage("Username", AppConstant.NOT_BLANK);
+                UsernameError.Text = AppConstant.GetExceptionMessage(AppConstant.USERNAME, AppConstant.NOT_BLANK);
                 valid = false;
             }
 
             if (string.IsNullOrWhiteSpace(account.Password))
             {
-                PasswordError.Text = AppConstant.GetExceptionMessage("Password", AppConstant.NOT_BLANK);
+                PasswordError.Text = AppConstant.GetExceptionMessage(AppConstant.PASSWORD, AppConstant.NOT_BLANK);
                 valid = false;
             }
 

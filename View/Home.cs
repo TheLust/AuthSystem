@@ -18,17 +18,27 @@ namespace AuthSystem.View
 
             if (account.Role.Name.Equals("Admin"))
             {
-                ToolStripMenuItem adminLink = new ToolStripMenuItem("Admin");
-                ToolStripItem accountLink = adminLink.DropDownItems.Add("Accounts");
+                ToolStripMenuItem adminLink = new ToolStripMenuItem(AppConstant.ADMIN);
+                ToolStripItem accountLink = adminLink.DropDownItems.Add(AppConstant.ACCOUNT.Item2);
                 accountLink.Click += AccountLink_Click;
-                ToolStripItem employeeLink = adminLink.DropDownItems.Add("Employees");
+                ToolStripItem employeeLink = adminLink.DropDownItems.Add(AppConstant.EMPLOYEE.Item2);
                 employeeLink.Click += EmployeeLink_Click;
-                ToolStripItem projectLink = adminLink.DropDownItems.Add("Projects");
+                ToolStripItem projectLink = adminLink.DropDownItems.Add(AppConstant.PROJECT.Item2);
                 projectLink.Click += ProjectLink_Click;
+                ToolStripItem jobLink = adminLink.DropDownItems.Add(AppConstant.JOB.Item2);
+                jobLink.Click += JobLink_Click;
+                ToolStripItem assignmentLink = adminLink.DropDownItems.Add(AppConstant.ASSIGNEMNT.Item2);
+                assignmentLink.Click += AssignmentLink_Click;
+                ToolStripItem wageLink = adminLink.DropDownItems.Add(AppConstant.WAGE.Item2);
+                wageLink.Click += WageLink_Click;
+                ToolStripItem bonusLink = adminLink.DropDownItems.Add(AppConstant.BONUS.Item2);
+                bonusLink.Click += BonusLink_Click;
+                ToolStripItem sessionLink = adminLink.DropDownItems.Add(AppConstant.SESSION.Item2);
+                sessionLink.Click += SessionLink_Click;
                 Menu.Items.Add(adminLink);
             }
 
-            ToolStripItem myAccount = Menu.Items.Add("My Account");
+            ToolStripItem myAccount = Menu.Items.Add(AppConstant.MY_ACCOUNT);
             myAccount.Click += MyAccount_Click;
         }
 
