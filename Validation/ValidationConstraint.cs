@@ -10,6 +10,7 @@ namespace AuthSystem
     {
         public bool NotBlank { get; set; }
         public bool Email { get; set; }
+        public bool Unique { get; set; }
         public bool Length { get; set; }
         public int Min { get; set; }
         public int Max { get; set; }
@@ -30,12 +31,23 @@ namespace AuthSystem
 
         public ValidationConstraint(bool notBlank,
                                     bool email,
+                                    bool unique)
+        {
+            NotBlank = notBlank;
+            Email = email;
+            Unique = unique;
+        }
+
+        public ValidationConstraint(bool notBlank,
+                                    bool email,
+                                    bool unique,
                                     bool length,
                                     int min,
                                     int max)
         {
             NotBlank = notBlank;
             Email = email;
+            Unique = unique;
             Length = length;
             Min = min;
             Max = max;
@@ -51,7 +63,8 @@ namespace AuthSystem
         }
 
         public ValidationConstraint(bool notBlank, 
-                                    bool email, 
+                                    bool email,
+                                    bool unique,
                                     bool length, 
                                     int min, 
                                     int max, 
@@ -60,6 +73,7 @@ namespace AuthSystem
         {
             NotBlank = notBlank;
             Email = email;
+            Unique = unique;
             Length = length;
             Min = min;
             Max = max;

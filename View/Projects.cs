@@ -28,6 +28,8 @@ namespace AuthSystem.View
             Crud<Project> crud = new Crud<Project>();
             crud.FindAllOperation = projectService.FindAll;
             crud.AddOperation = projectService.Add;
+            crud.UpdateOperation = projectService.Update;
+            crud.DeleteOperation = projectService.Remove;
             crud.HiddenFields = new List<string>() { "Id", "Assignments", "Wages" };
             crud.FieldsConstraints = new Dictionary<string, ValidationConstraint> {
                 {
@@ -36,11 +38,13 @@ namespace AuthSystem.View
                         true,
                         false,
                         true,
+                        true,
                         5,
                         100
                     )
                 }
             };
+
             Controls.Add(crud);
         }
 

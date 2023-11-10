@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AuthSystem.Component
@@ -34,6 +30,10 @@ namespace AuthSystem.Component
 
         public Action<T> AddOperation { get; set; }
 
+        public Action<int, T> UpdateOperation { get; set; }
+
+        public Action<T> DeleteOperation { get; set; }
+
         // Properties
 
         public Dictionary<string, ValidationConstraint> FieldsConstraints { get; set; }
@@ -48,6 +48,11 @@ namespace AuthSystem.Component
         }
 
         // Utils
+
+        private T FindUpdatedEntity(int entityId)
+        {
+            return FindAllOperation().FirstOrDefault(x => Convert.ToInt32(GetPropertyValue(x, "Id")) ==  entityId);
+        }
 
         private List<PropertyInfo> GetTProperties()
         {
@@ -290,6 +295,27 @@ namespace AuthSystem.Component
 
         private void AddSaveButton_Click(object sender, EventArgs e)
         {
+            if (FieldsConstraints.Values.FirstOrDefault(x => x.Unique) != null)
+            {
+                foreach (Control control in Form.Controls)
+                {
+                    if (FieldsConstraints.ContainsKey(control.Name))
+                    {
+                        if (FieldsConstraints[control.Name].Unique == true)
+                        {
+                            try 
+                            {
+                                Validator.Unique(control.Name, GetPropertyValue(GetEntityFromForm(), control.Name), FindAllOperation(), null);
+                            } catch (ValidationException ex) 
+                            {
+                                ((TextField)Form.Controls[control.Name]).Error = ex.Message;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
             try
             {
                 AddOperation(GetEntityFromForm());               
@@ -314,7 +340,19 @@ namespace AuthSystem.Component
 
         private void UpdateSaveButton_Click(object sender, EventArgs e)
         {
+            int id = Convert.ToInt32(GetPropertyValue(backEntity, "Id"));
+            try
+            {
+                UpdateOperation(id, GetEntityFromForm());
+            }
+            catch (ValidationException)
+            {
+                return;
+            }
 
+            backEntity = FindUpdatedEntity(id);
+            Reload();
+            UpdateMode(false);
         }
 
         private void UpdateCancelButton_Click(object sender, EventArgs e)
@@ -324,7 +362,19 @@ namespace AuthSystem.Component
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            
+            try
+            {
+                DeleteOperation(backEntity);
+            }
+            catch (ValidationException)
+            {
+                return;
+            }
+
+            backEntity = default;
+            FillForm(new T());
+            ClearErrors();
+            Reload();
         }
     }
 }
