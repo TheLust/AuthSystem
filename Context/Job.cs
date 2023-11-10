@@ -25,7 +25,7 @@ namespace AuthSystem.Context
         public string Name { get; set; }
         public string Rank { get; set; }
         public double BaseSalary { get; set; }
-        public string DisplayName { get { return Name + " | " + Rank; }}
+        public string DisplayName { get { return Name + " | " + Rank[0] + Rank.Substring(1).ToLower(); }}
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Employee> Employees { get; set; }

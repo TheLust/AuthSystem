@@ -1,4 +1,7 @@
-﻿using System;
+﻿using AuthSystem.Component;
+using AuthSystem.Context;
+using AuthSystem.Service;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,9 +15,34 @@ namespace AuthSystem.View
 {
     public partial class Projects : Form
     {
+        private ProjectService projectService;
+
         public Projects()
         {
+            projectService = new ProjectService();
             InitializeComponent();
+            LoadCrud();
         }
+        private void LoadCrud()
+        {
+            Crud<Project> crud = new Crud<Project>();
+            crud.FindAllOperation = projectService.FindAll;
+            crud.AddOperation = projectService.Add;
+            crud.HiddenFields = new List<string>() { "Id", "Assignments", "Wages" };
+            crud.FieldsConstraints = new Dictionary<string, ValidationConstraint> {
+                {
+                    "Name",
+                    new ValidationConstraint(
+                        true,
+                        false,
+                        true,
+                        5,
+                        100
+                    )
+                }
+            };
+            Controls.Add(crud);
+        }
+
     }
 }

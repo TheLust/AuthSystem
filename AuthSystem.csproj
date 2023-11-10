@@ -55,6 +55,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\Crud.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Component\Crud.Designer.cs">
+      <DependentUpon>Crud.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Component\TextField.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Component\TextField.Designer.cs">
+      <DependentUpon>TextField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Context\Account.cs">
       <DependentUpon>Context.tt</DependentUpon>
     </Compile>
@@ -101,9 +113,13 @@
     <Compile Include="Security\SecurityService.cs" />
     <Compile Include="Service\AccountService.cs" />
     <Compile Include="Service\EmployeeService.cs" />
+    <Compile Include="Service\ProjectService.cs" />
     <Compile Include="Service\JobService.cs" />
     <Compile Include="Service\RoleService.cs" />
     <Compile Include="Util\Constants\AppConstant.cs" />
+    <Compile Include="Exception\ValidationException.cs" />
+    <Compile Include="Validation\ValidationConstraint.cs" />
+    <Compile Include="Validation\Validator.cs" />
     <Compile Include="View\Accounts.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -178,8 +194,17 @@
     <Compile Include="View\Wages.Designer.cs">
       <DependentUpon>Wages.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Component\Crud.resx">
+      <DependentUpon>Crud.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Component\TextField.resx">
+      <DependentUpon>TextField.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Accounts.resx">
       <DependentUpon>Accounts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Employees.resx">
+      <DependentUpon>Employees.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Home.resx">
       <DependentUpon>Home.cs</DependentUpon>
@@ -199,6 +224,9 @@
     </Compile>
     <EmbeddedResource Include="View\MyAccount.resx">
       <DependentUpon>MyAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Projects.resx">
+      <DependentUpon>Projects.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Register.resx">
       <DependentUpon>Register.cs</DependentUpon>

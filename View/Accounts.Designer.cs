@@ -113,7 +113,7 @@
             this.AccountPanel.Controls.Add(this.UsernamePanel);
             this.AccountPanel.Location = new System.Drawing.Point(12, 384);
             this.AccountPanel.Name = "AccountPanel";
-            this.AccountPanel.Size = new System.Drawing.Size(560, 291);
+            this.AccountPanel.Size = new System.Drawing.Size(560, 274);
             this.AccountPanel.TabIndex = 6;
             // 
             // panel1
@@ -518,7 +518,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 687);
+            this.ClientSize = new System.Drawing.Size(800, 661);
             this.Controls.Add(this.CancelSaveButton);
             this.Controls.Add(this.SaveNewButton);
             this.Controls.Add(this.CancelButton);

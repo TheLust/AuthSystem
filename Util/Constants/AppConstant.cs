@@ -13,6 +13,16 @@ namespace AuthSystem.Util.Constants
         public const string NOT_NULL = " cannot be null";
         public const string ALREADY_EXISTS = " already exists";
         public const string BAD_CREDENTIALS = "Bad credentials";
+        public const string NOT_VALID = " is not valid";
+        public const string DEFAULT_PATTERN = " does not match the set pattern";
+        public static string MIN(int min)
+        {
+            return " must have more than " + min + " characters";
+        }
+        public static string MAX(int max)
+        {
+            return  " must have less than " + max + " characters";
+        }
 
         public const string WELCOME = "Ciao cacao, ";
         public const string ADMIN = "Admin";
@@ -29,6 +39,7 @@ namespace AuthSystem.Util.Constants
         public static readonly Tuple<string, string> SESSION = Tuple.Create("Session", "Sessions");
         public static readonly Tuple<string, string> ROLE = Tuple.Create("Rle", "Roles");
 
+        public const string Id = "Id";
         public const string USERNAME = "Username";
         public const string PASSWORD = "Password";
         public const string FIRST_NAME = "First name";
@@ -37,18 +48,24 @@ namespace AuthSystem.Util.Constants
         public const string PHONE_NUMBER = "Phone number";
 
         public const string PRIVACY_POLICY_MESSAGE = "Please read our privacy policy";
+        public const string VALIDATION_ERROR_MESSAGE = "Please input valid data";
         public const string ABSTRACT_ERROR_MESSGAE = "Something went wrong";
         public const string DELETE_CONFIRMATION = "Are you sure you want to proceed?";
         public const string SURE = "Sure?";
 
+        static string Format(string input)
+        {
+            return string.IsNullOrEmpty(input) ? input : input.Substring(0, 1).ToUpper() + input.Substring(1).ToLower();
+        }
+
         public static string GetExceptionMessage(string entity, string field, string message)
         {
-            return entity + " with this " + field.ToLower() + message;
+            return Format(entity) + " with this " + field.ToLower() + message;
         }
 
         public static string GetExceptionMessage(string field, string message)
         {
-            return field + message;
+            return Format(field) + message;
         }
     }
 }
