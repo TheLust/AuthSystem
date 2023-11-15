@@ -55,11 +55,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\ComboField.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Component\ComboField.Designer.cs">
+      <DependentUpon>ComboField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Component\Crud.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Component\Crud.Designer.cs">
       <DependentUpon>Crud.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Component\Field.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Component\Field.Designer.cs">
+      <DependentUpon>Field.cs</DependentUpon>
     </Compile>
     <Compile Include="Component\TextField.cs">
       <SubType>UserControl</SubType>
@@ -118,6 +130,7 @@
     <Compile Include="Service\RoleService.cs" />
     <Compile Include="Util\Constants\AppConstant.cs" />
     <Compile Include="Exception\ValidationException.cs" />
+    <Compile Include="Util\GenericUtils.cs" />
     <Compile Include="Validation\ValidationConstraint.cs" />
     <Compile Include="Validation\Validator.cs" />
     <Compile Include="View\Accounts.cs">
@@ -194,8 +207,14 @@
     <Compile Include="View\Wages.Designer.cs">
       <DependentUpon>Wages.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Component\ComboField.resx">
+      <DependentUpon>ComboField.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Component\Crud.resx">
       <DependentUpon>Crud.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Component\Field.resx">
+      <DependentUpon>Field.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Component\TextField.resx">
       <DependentUpon>TextField.cs</DependentUpon>

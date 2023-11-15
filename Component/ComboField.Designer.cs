@@ -1,6 +1,6 @@
 ﻿namespace AuthSystem.Component
 {
-    partial class TextField
+    partial class ComboField<T>
     {
         /// <summary>
         /// Required designer variable.
@@ -28,25 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.FieldTextBox = new System.Windows.Forms.TextBox();
+            this.FieldComboBox = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
-            // FieldTextBox
+            // FieldComboBox
             // 
-            this.FieldTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.FieldComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.FieldTextBox.Location = new System.Drawing.Point(10, 25);
-            this.FieldTextBox.Name = "FieldTextBox";
-            this.FieldTextBox.Size = new System.Drawing.Size(260, 20);
-            this.FieldTextBox.TabIndex = 2;
-            this.FieldTextBox.TextChanged += new System.EventHandler(this.FieldTextBox_TextChanged);
+            this.FieldComboBox.FormattingEnabled = true;
+            this.FieldComboBox.Location = new System.Drawing.Point(10, 25);
+            this.FieldComboBox.Name = "FieldComboBox";
+            this.FieldComboBox.Size = new System.Drawing.Size(260, 21);
+            this.FieldComboBox.TabIndex = 5;
+            this.FieldComboBox.SelectedIndexChanged += new System.EventHandler(this.FieldComboBox_SelectedIndexChanged);
             // 
-            // TextField
+            // ComboField
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.Controls.Add(this.FieldTextBox);
-            this.Name = "TextField";
-            this.Controls.SetChildIndex(this.FieldTextBox, 0);
+            this.Controls.Add(this.FieldComboBox);
+            this.Name = "ComboField";
+            this.Load += new System.EventHandler(this.ComboField_Load);
+            this.Controls.SetChildIndex(this.FieldComboBox, 0);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -54,6 +56,6 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox FieldTextBox;
+        private System.Windows.Forms.ComboBox FieldComboBox;
     }
 }

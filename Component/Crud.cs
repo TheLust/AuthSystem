@@ -1,19 +1,22 @@
-﻿using System;
+﻿using AuthSystem.Util;
+using AuthSystem.Util.Constants;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AuthSystem.Component
 {
     public partial class Crud<T> : UserControl where T : new()
     {
-
-        // Init
-
-        T backEntity;
-
         public Crud()
         {
             InitializeComponent();
@@ -21,10 +24,49 @@ namespace AuthSystem.Component
 
         private void Crud_Load(object sender, EventArgs e)
         {
+            if (FindAllOperation == null)
+            {
+                throw new Exception("Could not load the component because FindAllOperation is not provided");
+            }
+
+            if (Fields == null)
+            {
+                throw new Exception("Could not load the component because Fields is not provided");
+            }
+
             InitializeGrid();
+            GenerateForm();
+            ClearErrors();
         }
 
-        // Operations
+        // Properties
+
+        /* 
+         * Fields Property are the columns and fields that will be generated
+         * by the component to keep in mind that if field is of type object
+         * fields should be added manually using addField method
+         * 
+         * **/
+
+        public Dictionary<string, string> Fields { get; set; }
+
+        /*
+         * FieldReferences represents the id of the object field references to
+         * this is unnecessarily if the database structure is right defined but if not it
+         * requires to specify it, for example if the field is Job the Field Reference
+         * will be JobId auto, if T does not have this field it will require to be
+         * assigned manually
+         * 
+         * **/
+
+        public Dictionary<string, string> FieldReferences { get; set; }
+
+        /*
+         * FieldConstraints represents the constraints of the given fields
+         * 
+         * **/
+
+        public Dictionary<string, ValidationConstraint> FieldConstraints { get; set; }
 
         public Func<List<T>> FindAllOperation { get; set; }
 
@@ -34,347 +76,284 @@ namespace AuthSystem.Component
 
         public Action<T> DeleteOperation { get; set; }
 
-        // Properties
+        // Grid
 
-        public Dictionary<string, ValidationConstraint> FieldsConstraints { get; set; }
-
-        public List<string> HiddenFields { get; set; }
-
-        // Operations Methods
-
-        private void Reload()
-        {
-            Grid.DataSource = FindAllOperation != null ? FindAllOperation() : null;
-        }
-
-        // Utils
-
-        private T FindUpdatedEntity(int entityId)
-        {
-            return FindAllOperation().FirstOrDefault(x => Convert.ToInt32(GetPropertyValue(x, "Id")) ==  entityId);
-        }
-
-        private List<PropertyInfo> GetTProperties()
-        {
-            return typeof(T).GetProperties().Where(x => !HiddenFields.Contains(x.Name)).ToList();
-        }
-
-        private List<string> GetTPropertiesNames() 
-        {
-            return GetTProperties().Select(x => x.Name).ToList();
-        }
+        private T SelectedEntity { get; set; }
 
         private void InitializeGrid()
         {
-            Grid.DataSource = FindAllOperation != null ? FindAllOperation() : null;
+            Grid.AutoGenerateColumns = false;
 
-            if (HiddenFields != null)
+            foreach (var field in Fields)
             {
-                foreach (var field in HiddenFields)
-                {
-                    if (Grid.Columns.Contains(field))
-                    {
-                        Grid.Columns[field].Visible = false;
-                    }
-                }
-            }
+                DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
+                column.Name = field.Key;
+                column.HeaderText = field.Key;
+                column.ReadOnly = true;
+                column.DataPropertyName = field.Key;
 
-            GenerateForm();
+                if (field.Value != null)
+                {
+                    column.DataPropertyName = field.Key + "." + field.Value;
+                }
+
+                Grid.Columns.Add(column);
+                SetGridDataSource();
+            }
         }
 
-        private TextField GenerateTextField(string name)
+        private void SetGridDataSource()
         {
-            TextField field = new TextField();
-            field.Name = name;
-            field.Label = name;
-            field.Enabled = false;
-
-            if (FieldsConstraints != null)
-            {
-                if (FieldsConstraints.ContainsKey(name))
-                {
-                    ValidationConstraint constraints = FieldsConstraints[name];
-                    Console.WriteLine(constraints.ToString());
-                    field.NotBlank = constraints.NotBlank;
-                    field.Email = constraints.Email;
-                    field.Length = constraints.Length;
-                    field.Min = constraints.Min;
-                    field.Max = constraints.Max;
-                    field.Pattern = constraints.Pattern;
-                    field.PatternMessage = constraints.PatternMessage;
-                }
-            }
-
-            return field;
+            Grid.DataSource = FindAllOperation();
         }
 
-        private UserControl GenerateField(PropertyInfo property)
+        private void Grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (property.PropertyType == typeof(string))
+            SelectedEntity = (T)Grid.Rows[e.RowIndex >= 0 ? e.RowIndex : 0].DataBoundItem;
+            FillForm(SelectedEntity);
+            UpdateButton.Enabled = true;
+            DeleteButton.Enabled = true;
+        }
+
+        private void Grid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+
+            DataGridView grid = (DataGridView)sender;
+            DataGridViewRow row = grid.Rows[e.RowIndex];
+            DataGridViewColumn col = grid.Columns[e.ColumnIndex];
+            if (row.DataBoundItem != null && col.DataPropertyName.Contains("."))
             {
-                return GenerateTextField(property.Name);
+                string[] props = col.DataPropertyName.Split('.');
+                PropertyInfo propInfo = row.DataBoundItem.GetType().GetProperty(props[0]);
+                object val = propInfo.GetValue(row.DataBoundItem, null);
+                for (int i = 1; i < props.Length; i++)
+                {
+                    propInfo = val.GetType().GetProperty(props[i]);
+                    val = propInfo.GetValue(val, null);
+                }
+                e.Value = val;
             }
-            return null;
+        }
+
+        // Form
+
+        private bool FormEnabled 
+        { 
+            set 
+            {
+                foreach (Control control in Form.Controls)
+                {
+                    control.Enabled = value;
+                }
+            }
         }
 
         private void GenerateForm()
         {
-            foreach (PropertyInfo property in GetTProperties())
+            foreach (var field in Fields)
             {
-                if (!HiddenFields.Contains(property.Name))
+                if (field.Value == null)
                 {
-                    Form.Controls.Add(GenerateField(property));
+                    // Generate field depending of type
                 }
             }
         }
 
-        private string GetPropertyValue(T entity, string propertyName)
+        public void AddField<G>(Func<List<G>> findAll, string value, string display)
         {
-            return typeof(T).GetProperty(propertyName).GetValue(entity)?.ToString();
+            string typeName = typeof(G).Name;
+
+            if (!GenericUtils.HasProperty<T>(typeName))
+            {
+                throw new Exception("Trying to add invalid field");
+            }
+
+            ComboField<G> field = new ComboField<G>(findAll, value, display);
+            field.Name = typeName;
+            field.Label = typeName;
+            field.Enabled = false;
+
+            if (FieldConstraints != null && FieldConstraints.ContainsKey(typeName))
+            {
+                field.NotNull = FieldConstraints[typeName].NotNull;
+            }
+
+            Form.Controls.Add(field);
         }
 
-        private T SetPropertyValue(T entity, string propertyName, string value)
+        private void ClearErrors()
         {
-            typeof(T).GetProperty(propertyName).SetValue(entity, Convert.ChangeType(value, typeof(T).GetProperty(propertyName).PropertyType));
-            return entity;
+            foreach (Field field in Form.Controls)
+            {
+                field.Error = string.Empty;
+            }
         }
 
         private void FillForm(T entity)
         {
-            if (entity == null)
+            foreach (var field in Fields)
             {
-                return;
-            }
-
-            List<string> properties = GetTPropertiesNames();
-
-            foreach (TextField control in Form.Controls)
-            {
-                if (properties.Contains(control.Name))
-                {
-                    control.FieldValue = GetPropertyValue(entity, control.Name);
-                }
+                GenericUtils.SetPropertyValue(
+                    Form.Controls[field.Key],
+                    "FieldValue",
+                    GenericUtils.GetPropertyValue(
+                        entity, (field.Value == null ? field.Key : 
+                            (GenericUtils.HasProperty<T>(field.Key + "Id") ? (field.Key + "Id") :
+                                (FieldReferences != null && FieldReferences.ContainsKey(field.Key) ? FieldReferences[field.Key] : 
+                                    throw new Exception($"Reference for field '{field.Key}' is required")))))
+                );
             }
         }
 
         private T GetEntityFromForm()
         {
             T entity = new T();
-            List<string> properties = GetTPropertiesNames();
+            ValidationException validationException = null;
 
-            foreach (Control control in Form.Controls)
+            foreach (var field in Fields)
             {
-                if (properties.Contains(control.Name))
+                try {
+                    GenericUtils.SetPropertyValue(
+                        entity,
+                        (field.Value == null ? field.Key :
+                            (GenericUtils.HasProperty<T>(field.Key + "Id") ? (field.Key + "Id") :
+                                (FieldReferences != null && FieldReferences.ContainsKey(field.Key) ? FieldReferences[field.Key] :
+                                    throw new Exception($"Reference for field '{field.Key}' is required")))),
+                        GenericUtils.GetPropertyValue(
+                            Form.Controls[field.Key] ??
+                                throw new Exception("Field not found, please add it manually"),
+                            "FieldValue")
+                    );
+                } catch (ValidationException ex)
                 {
-                    if (control.GetType() == typeof(TextField))
+                    if (validationException == null)
                     {
-                        entity = SetPropertyValue(
-                                entity,
-                                control.Name,
-                                ((TextField) control).FieldValue
-                            );
+                        validationException = ex;
                     }
                 }
+            } 
+
+            if (validationException != null)
+            {
+                throw validationException;
             }
 
             return entity;
         }
 
-        private T GetEntityFromGrid(DataGridViewCellEventArgs e)
-        {
-            T entity = new T();
-            List<string> properties = GetTPropertiesNames();
-            properties.Add("Id");
-
-            foreach (DataGridViewColumn column in Grid.Columns)
-            {
-                if (properties.Contains(column.Name))
-                {
-                    entity = SetPropertyValue(
-                            entity, 
-                            column.Name, 
-                            Grid.Rows[e.RowIndex >= 0 ? e.RowIndex : 0].Cells[column.Name].Value.ToString()
-                        );
-                }
-            }
-
-            // Set id for selected entity
-
-            backEntity = entity;
-
-            return entity;
-        }
-
-        private void EnableForm(bool enable)
-        {
-            foreach (Control control in Form.Controls)
-            {
-                control.Enabled = enable;
-            }
-        }
-
-        private void ClearErrors()
-        {
-            foreach (Control control in Form.Controls)
-            {
-                if (control.GetType() == typeof(TextField))
-                {
-                    ((TextField)control).Error = string.Empty;
-                }
-            }
-        }
+        // Buttons
 
         private void HideButtons()
         {
-            foreach (Button button in ButtonPanel.Controls)
+            foreach (Control control in ButtonPanel.Controls)
             {
-                button.Visible = false;
+                control.Visible = false;
             }
         }
 
-        private void AddMode(bool enable)
+        private void ViewMode()
         {
+            FillForm(SelectedEntity != null ? SelectedEntity : new T());
+            ClearErrors();
             HideButtons();
-
-            if (enable)
-            {
-                FillForm(new T());
-                EnableForm(true);
-                AddSaveButton.Visible = true;
-                AddCancelButton.Visible = true;
-            }
-            else
-            {
-                FillForm(backEntity);
-                ClearErrors();
-                EnableForm(false);
-                ReloadButton.Visible = true;
-                AddButton.Visible = true;
-                UpdateButton.Visible = true;
-                DeleteButton.Visible = true;
-            }
+            FormEnabled = false;
+            ReloadButton.Visible = true;
+            AddButton.Visible = true;
+            UpdateButton.Visible = true;
+            DeleteButton.Visible = true;
         }
 
-        private void UpdateMode(bool enable)
-        {
-            HideButtons();
-            if (enable)
-            {
-                EnableForm(true);
-                UpdateSaveButton.Visible = true;
-                UpdateCancelButton.Visible = true;
-            }
-            else
-            {
-                FillForm(backEntity);
-                ClearErrors();
-                EnableForm(false);
-                ReloadButton.Visible = true;
-                AddButton.Visible = true;
-                UpdateButton.Visible = true;
-                DeleteButton.Visible = true;
-            }
-        }
+        // Events
 
         private void ReloadButton_Click(object sender, EventArgs e)
         {
-            Reload();
-        }
-
-        private void Grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            FillForm(GetEntityFromGrid(e));
-            UpdateButton.Enabled = true;
-            DeleteButton.Enabled = true;
+            SetGridDataSource();
         }
 
         private void AddButton_Click(object sender, EventArgs e)
         {
-            AddMode(true);
+            FillForm(new T());
+            ClearErrors();
+            HideButtons();
+            FormEnabled = true;
+            AddSaveButton.Visible = true;
+            AddCancelButton.Visible = true;
         }
 
         private void AddSaveButton_Click(object sender, EventArgs e)
         {
-            if (FieldsConstraints.Values.FirstOrDefault(x => x.Unique) != null)
-            {
-                foreach (Control control in Form.Controls)
-                {
-                    if (FieldsConstraints.ContainsKey(control.Name))
-                    {
-                        if (FieldsConstraints[control.Name].Unique == true)
-                        {
-                            try 
-                            {
-                                Validator.Unique(control.Name, GetPropertyValue(GetEntityFromForm(), control.Name), FindAllOperation(), null);
-                            } catch (ValidationException ex) 
-                            {
-                                ((TextField)Form.Controls[control.Name]).Error = ex.Message;
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-
             try
             {
-                AddOperation(GetEntityFromForm());               
-            } catch (ValidationException) 
-            { 
-                return; 
+                T entity = GetEntityFromForm();
+                bool unique = true;
+                foreach(var field in FieldConstraints.Where(x => x.Value.Unique)) {
+                    string find = (field.Value == null ? field.Key :
+                                    (GenericUtils.HasProperty<T>(field.Key + "Id") ? (field.Key + "Id") :
+                                        (FieldReferences != null && FieldReferences.ContainsKey(field.Key) ? FieldReferences[field.Key] :
+                                            throw new Exception($"Reference for field '{field.Key}' is required"))));
+                    try
+                    {
+                        Validator.Unique(find, GenericUtils.GetPropertyValue(entity, find), FindAllOperation(), null);
+                    }
+                    catch (ValidationException)
+                    {
+                        ((Field)Form.Controls[field.Key]).Error = AppConstant.GetExceptionMessage(AppConstant.EMPLOYEE.Item1, field.Key, AppConstant.ALREADY_EXISTS);
+                        unique = false;
+                    }
+                }
+
+                if (!unique)
+                {
+                    throw new ValidationException("One or more fields are not unique");
+                }
+
+                AddOperation(entity);
+            }
+            catch (ValidationException) {
+                return;
             }
 
-            Reload();
-            AddMode(false);
+            SetGridDataSource();
         }
 
         private void AddCancelButton_Click(object sender, EventArgs e)
         {
-            AddMode(false);
+            ViewMode();
         }
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            UpdateMode(true);
+            HideButtons();
+            FormEnabled = true;
+            UpdateSaveButton.Visible = true;
+            UpdateCancelButton.Visible = true;
         }
 
         private void UpdateSaveButton_Click(object sender, EventArgs e)
         {
-            int id = Convert.ToInt32(GetPropertyValue(backEntity, "Id"));
-            try
-            {
-                UpdateOperation(id, GetEntityFromForm());
-            }
-            catch (ValidationException)
-            {
-                return;
-            }
-
-            backEntity = FindUpdatedEntity(id);
-            Reload();
-            UpdateMode(false);
+            
         }
 
         private void UpdateCancelButton_Click(object sender, EventArgs e)
         {
-            UpdateMode(false);
+            ViewMode();
         }
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            try
+            DialogResult dialogResult = MessageBox.Show(AppConstant.DELETE_CONFIRMATION, AppConstant.SURE, MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
             {
-                DeleteOperation(backEntity);
-            }
-            catch (ValidationException)
-            {
-                return;
+                try
+                {
+                    DeleteOperation(SelectedEntity);
+                } catch (DbUpdateException) {
+                    MessageBox.Show("Could not delete item because another item depends on it");
+                    return;
+                }
             }
 
-            backEntity = default;
-            FillForm(new T());
-            ClearErrors();
-            Reload();
+            SetGridDataSource();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace AuthSystem
         {
             authFacade = new AuthFacade();
             InitializeComponent();
-            Projects employees = new Projects();
+            Employees employees = new Employees();
             employees.ShowDialog();
         }
 

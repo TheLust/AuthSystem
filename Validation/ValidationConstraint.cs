@@ -8,6 +8,7 @@ namespace AuthSystem
 {
     public class ValidationConstraint
     {
+        public bool NotNull { get; set; }
         public bool NotBlank { get; set; }
         public bool Email { get; set; }
         public bool Unique { get; set; }
@@ -16,6 +17,10 @@ namespace AuthSystem
         public int Max { get; set; }
         public string Pattern { get; set; }
         public string PatternMessage { get; set; }
+
+        public ValidationConstraint()
+        {
+        }
 
         public ValidationConstraint(bool notBlank)
         {

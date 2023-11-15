@@ -25,27 +25,7 @@ namespace AuthSystem.View
         }
         private void LoadCrud()
         {
-            Crud<Project> crud = new Crud<Project>();
-            crud.FindAllOperation = projectService.FindAll;
-            crud.AddOperation = projectService.Add;
-            crud.UpdateOperation = projectService.Update;
-            crud.DeleteOperation = projectService.Remove;
-            crud.HiddenFields = new List<string>() { "Id", "Assignments", "Wages" };
-            crud.FieldsConstraints = new Dictionary<string, ValidationConstraint> {
-                {
-                    "Name",
-                    new ValidationConstraint(
-                        true,
-                        false,
-                        true,
-                        true,
-                        5,
-                        100
-                    )
-                }
-            };
 
-            Controls.Add(crud);
         }
 
     }

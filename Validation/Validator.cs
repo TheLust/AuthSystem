@@ -1,4 +1,5 @@
-﻿using AuthSystem.Util.Constants;
+﻿using AuthSystem.Util;
+using AuthSystem.Util.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,15 @@ namespace AuthSystem
 {
     public class Validator
     {
+
+        public static void NotNull(string field, object toValidate)
+        {
+            if (toValidate == null)
+            {
+                throw new ValidationException(AppConstant.GetExceptionMessage(field, AppConstant.NOT_NULL));
+            }
+        }
+
         public static void NotBlank(string field, string toValidate)
         {
             if (string.IsNullOrWhiteSpace(toValidate))
@@ -50,19 +60,14 @@ namespace AuthSystem
             }
         }
 
-        private static string GetPropertyValue<T>(T entity, string propertyName)
+        public static void Unique<T>(string field, object toValidate, List<T> entities, int? id)
         {
-            return typeof(T).GetProperty(propertyName).GetValue(entity)?.ToString();
-        }
-
-        public static void Unique<T>(string field, string toValidate, List<T> entities, int? id)
-        {
-            T foundEntity = entities.FirstOrDefault(x => GetPropertyValue(x, field).Equals(toValidate));
+            T foundEntity = entities.FirstOrDefault(x => GenericUtils.GetPropertyValue(x, field).Equals(toValidate));
             if (foundEntity != null) 
             {
                 if (id != null)
                 {
-                    if (id != Convert.ToInt32(GetPropertyValue(foundEntity, "Id")))
+                    if (id != Convert.ToInt32(GenericUtils.GetPropertyValue(foundEntity, "Id")))
                     {
                         throw new ValidationException(AppConstant.GetExceptionMessage(field, AppConstant.ALREADY_EXISTS));
                     }

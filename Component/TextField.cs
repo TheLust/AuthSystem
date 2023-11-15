@@ -4,29 +4,17 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AuthSystem.Component
 {
-    public partial class TextField : UserControl
+    public partial class TextField : AuthSystem.Component.Field
     {
         public TextField()
         {
             InitializeComponent();
         }
-
-        [
-            Category("Custom"),
-            Description("Text of the field label")
-        ]
-        public string Label { get { return FieldLabel.Text; } set { FieldLabel.Text = value; } }
-
-        public string Error { get { return FieldError.Text; } set { FieldError.Text = value; } }
 
         [
             Category("Validation"),
@@ -74,20 +62,24 @@ namespace AuthSystem.Component
         ]
         public string PatternMessage { get; set; }
 
-        public string FieldValue { 
-            get {
+        public string FieldValue
+        {
+            get
+            {
                 return ValidateField(FieldTextBox.Text) ?
                 FieldTextBox.Text : throw new ValidationException(AppConstant.VALIDATION_ERROR_MESSAGE);
             }
-            set { 
-                FieldTextBox.Text = value; 
-            } 
+            set
+            {
+                FieldTextBox.Text = value;
+            }
         }
 
         private bool ValidateField(string toValidate)
         {
-            try {
-            
+            try
+            {
+
                 if (NotBlank)
                 {
                     Validator.NotBlank(Label, toValidate);
@@ -106,10 +98,11 @@ namespace AuthSystem.Component
                 if (!string.IsNullOrWhiteSpace(Pattern) && !Email)
                 {
                     Validator.Pattern(Label, PatternMessage, toValidate, Pattern);
-                } 
-            } catch (ValidationException e) 
-            { 
-                FieldError.Text = e.Message;
+                }
+            }
+            catch (ValidationException e)
+            {
+                Error = e.Message;
                 return false;
             }
             return true;
@@ -117,7 +110,7 @@ namespace AuthSystem.Component
 
         private void FieldTextBox_TextChanged(object sender, EventArgs e)
         {
-            FieldError.Text = string.Empty;
+            Error = string.Empty;
             ValidateField(FieldTextBox.Text);
         }
     }
