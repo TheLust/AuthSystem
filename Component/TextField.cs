@@ -62,16 +62,16 @@ namespace AuthSystem.Component
         ]
         public string PatternMessage { get; set; }
 
-        public string FieldValue
+        public object FieldValue
         {
             get
             {
                 return ValidateField(FieldTextBox.Text) ?
-                FieldTextBox.Text : throw new ValidationException(AppConstant.VALIDATION_ERROR_MESSAGE);
+                (object)FieldTextBox.Text : new ValidationException(AppConstant.VALIDATION_ERROR_MESSAGE);
             }
             set
             {
-                FieldTextBox.Text = value;
+                FieldTextBox.Text = value != null ? value.ToString() : "";
             }
         }
 

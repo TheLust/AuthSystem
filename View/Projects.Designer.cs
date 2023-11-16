@@ -28,7 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.entityCommand1 = new System.Data.Entity.Core.EntityClient.EntityCommand();
             this.SuspendLayout();
+            // 
+            // entityCommand1
+            // 
+            this.entityCommand1.CommandTimeout = 0;
+            this.entityCommand1.CommandTree = null;
+            this.entityCommand1.Connection = null;
+            this.entityCommand1.EnablePlanCaching = true;
+            this.entityCommand1.Transaction = null;
             // 
             // Projects
             // 
@@ -43,5 +52,7 @@
         }
 
         #endregion
+
+        private System.Data.Entity.Core.EntityClient.EntityCommand entityCommand1;
     }
 }

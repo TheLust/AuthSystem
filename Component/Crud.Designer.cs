@@ -31,14 +31,14 @@
             this.Grid = new System.Windows.Forms.DataGridView();
             this.Form = new System.Windows.Forms.FlowLayoutPanel();
             this.ButtonPanel = new System.Windows.Forms.Panel();
-            this.ReloadButton = new System.Windows.Forms.Button();
-            this.AddButton = new System.Windows.Forms.Button();
-            this.UpdateButton = new System.Windows.Forms.Button();
-            this.DeleteButton = new System.Windows.Forms.Button();
-            this.AddSaveButton = new System.Windows.Forms.Button();
-            this.AddCancelButton = new System.Windows.Forms.Button();
-            this.UpdateSaveButton = new System.Windows.Forms.Button();
             this.UpdateCancelButton = new System.Windows.Forms.Button();
+            this.UpdateSaveButton = new System.Windows.Forms.Button();
+            this.AddCancelButton = new System.Windows.Forms.Button();
+            this.AddSaveButton = new System.Windows.Forms.Button();
+            this.DeleteButton = new System.Windows.Forms.Button();
+            this.UpdateButton = new System.Windows.Forms.Button();
+            this.AddButton = new System.Windows.Forms.Button();
+            this.ReloadButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).BeginInit();
             this.ButtonPanel.SuspendLayout();
             this.SuspendLayout();
@@ -53,7 +53,6 @@
             this.Grid.Size = new System.Drawing.Size(694, 305);
             this.Grid.TabIndex = 0;
             this.Grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellDoubleClick);
-            this.Grid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Grid_CellFormatting);
             // 
             // Form
             // 
@@ -77,81 +76,18 @@
             this.ButtonPanel.Size = new System.Drawing.Size(110, 200);
             this.ButtonPanel.TabIndex = 2;
             // 
-            // ReloadButton
+            // UpdateCancelButton
             // 
-            this.ReloadButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.ReloadButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ReloadButton.Location = new System.Drawing.Point(5, 5);
-            this.ReloadButton.Name = "ReloadButton";
-            this.ReloadButton.Size = new System.Drawing.Size(100, 35);
-            this.ReloadButton.TabIndex = 9;
-            this.ReloadButton.Text = "Reload";
-            this.ReloadButton.UseVisualStyleBackColor = true;
-            this.ReloadButton.Click += new System.EventHandler(this.ReloadButton_Click);
-            // 
-            // AddButton
-            // 
-            this.AddButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.AddButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AddButton.Location = new System.Drawing.Point(5, 46);
-            this.AddButton.Name = "AddButton";
-            this.AddButton.Size = new System.Drawing.Size(100, 35);
-            this.AddButton.TabIndex = 10;
-            this.AddButton.Text = "Add";
-            this.AddButton.UseVisualStyleBackColor = true;
-            this.AddButton.Click += new System.EventHandler(this.AddButton_Click);
-            // 
-            // UpdateButton
-            // 
-            this.UpdateButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.UpdateButton.Enabled = false;
-            this.UpdateButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UpdateButton.Location = new System.Drawing.Point(5, 87);
-            this.UpdateButton.Name = "UpdateButton";
-            this.UpdateButton.Size = new System.Drawing.Size(100, 35);
-            this.UpdateButton.TabIndex = 11;
-            this.UpdateButton.Text = "Update";
-            this.UpdateButton.UseVisualStyleBackColor = true;
-            this.UpdateButton.Click += new System.EventHandler(this.UpdateButton_Click);
-            // 
-            // DeleteButton
-            // 
-            this.DeleteButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.DeleteButton.Enabled = false;
-            this.DeleteButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DeleteButton.Location = new System.Drawing.Point(5, 128);
-            this.DeleteButton.Name = "DeleteButton";
-            this.DeleteButton.Size = new System.Drawing.Size(100, 35);
-            this.DeleteButton.TabIndex = 12;
-            this.DeleteButton.Text = "Delete";
-            this.DeleteButton.UseVisualStyleBackColor = true;
-            this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
-            // 
-            // AddSaveButton
-            // 
-            this.AddSaveButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.AddSaveButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AddSaveButton.Location = new System.Drawing.Point(5, 46);
-            this.AddSaveButton.Name = "AddSaveButton";
-            this.AddSaveButton.Size = new System.Drawing.Size(100, 35);
-            this.AddSaveButton.TabIndex = 13;
-            this.AddSaveButton.Text = "Save";
-            this.AddSaveButton.UseVisualStyleBackColor = true;
-            this.AddSaveButton.Visible = false;
-            this.AddSaveButton.Click += new System.EventHandler(this.AddSaveButton_Click);
-            // 
-            // AddCancelButton
-            // 
-            this.AddCancelButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.AddCancelButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AddCancelButton.Location = new System.Drawing.Point(5, 87);
-            this.AddCancelButton.Name = "AddCancelButton";
-            this.AddCancelButton.Size = new System.Drawing.Size(100, 35);
-            this.AddCancelButton.TabIndex = 14;
-            this.AddCancelButton.Text = "Cancel";
-            this.AddCancelButton.UseVisualStyleBackColor = true;
-            this.AddCancelButton.Visible = false;
-            this.AddCancelButton.Click += new System.EventHandler(this.AddCancelButton_Click);
+            this.UpdateCancelButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.UpdateCancelButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UpdateCancelButton.Location = new System.Drawing.Point(5, 128);
+            this.UpdateCancelButton.Name = "UpdateCancelButton";
+            this.UpdateCancelButton.Size = new System.Drawing.Size(100, 35);
+            this.UpdateCancelButton.TabIndex = 16;
+            this.UpdateCancelButton.Text = "Cancel";
+            this.UpdateCancelButton.UseVisualStyleBackColor = true;
+            this.UpdateCancelButton.Visible = false;
+            this.UpdateCancelButton.Click += new System.EventHandler(this.UpdateCancelButton_Click);
             // 
             // UpdateSaveButton
             // 
@@ -166,18 +102,81 @@
             this.UpdateSaveButton.Visible = false;
             this.UpdateSaveButton.Click += new System.EventHandler(this.UpdateSaveButton_Click);
             // 
-            // UpdateCancelButton
+            // AddCancelButton
             // 
-            this.UpdateCancelButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.UpdateCancelButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UpdateCancelButton.Location = new System.Drawing.Point(5, 128);
-            this.UpdateCancelButton.Name = "UpdateCancelButton";
-            this.UpdateCancelButton.Size = new System.Drawing.Size(100, 35);
-            this.UpdateCancelButton.TabIndex = 16;
-            this.UpdateCancelButton.Text = "Cancel";
-            this.UpdateCancelButton.UseVisualStyleBackColor = true;
-            this.UpdateCancelButton.Visible = false;
-            this.UpdateCancelButton.Click += new System.EventHandler(this.UpdateCancelButton_Click);
+            this.AddCancelButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.AddCancelButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AddCancelButton.Location = new System.Drawing.Point(5, 87);
+            this.AddCancelButton.Name = "AddCancelButton";
+            this.AddCancelButton.Size = new System.Drawing.Size(100, 35);
+            this.AddCancelButton.TabIndex = 14;
+            this.AddCancelButton.Text = "Cancel";
+            this.AddCancelButton.UseVisualStyleBackColor = true;
+            this.AddCancelButton.Visible = false;
+            this.AddCancelButton.Click += new System.EventHandler(this.AddCancelButton_Click);
+            // 
+            // AddSaveButton
+            // 
+            this.AddSaveButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.AddSaveButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AddSaveButton.Location = new System.Drawing.Point(5, 46);
+            this.AddSaveButton.Name = "AddSaveButton";
+            this.AddSaveButton.Size = new System.Drawing.Size(100, 35);
+            this.AddSaveButton.TabIndex = 13;
+            this.AddSaveButton.Text = "Save";
+            this.AddSaveButton.UseVisualStyleBackColor = true;
+            this.AddSaveButton.Visible = false;
+            this.AddSaveButton.Click += new System.EventHandler(this.AddSaveButton_Click);
+            // 
+            // DeleteButton
+            // 
+            this.DeleteButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.DeleteButton.Enabled = false;
+            this.DeleteButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DeleteButton.Location = new System.Drawing.Point(5, 128);
+            this.DeleteButton.Name = "DeleteButton";
+            this.DeleteButton.Size = new System.Drawing.Size(100, 35);
+            this.DeleteButton.TabIndex = 12;
+            this.DeleteButton.Text = "Delete";
+            this.DeleteButton.UseVisualStyleBackColor = true;
+            this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
+            // 
+            // UpdateButton
+            // 
+            this.UpdateButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.UpdateButton.Enabled = false;
+            this.UpdateButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UpdateButton.Location = new System.Drawing.Point(5, 87);
+            this.UpdateButton.Name = "UpdateButton";
+            this.UpdateButton.Size = new System.Drawing.Size(100, 35);
+            this.UpdateButton.TabIndex = 11;
+            this.UpdateButton.Text = "Update";
+            this.UpdateButton.UseVisualStyleBackColor = true;
+            this.UpdateButton.Click += new System.EventHandler(this.UpdateButton_Click);
+            // 
+            // AddButton
+            // 
+            this.AddButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.AddButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AddButton.Location = new System.Drawing.Point(5, 46);
+            this.AddButton.Name = "AddButton";
+            this.AddButton.Size = new System.Drawing.Size(100, 35);
+            this.AddButton.TabIndex = 10;
+            this.AddButton.Text = "Add";
+            this.AddButton.UseVisualStyleBackColor = true;
+            this.AddButton.Click += new System.EventHandler(this.AddButton_Click);
+            // 
+            // ReloadButton
+            // 
+            this.ReloadButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.ReloadButton.Font = new System.Drawing.Font("Bahnschrift", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ReloadButton.Location = new System.Drawing.Point(5, 5);
+            this.ReloadButton.Name = "ReloadButton";
+            this.ReloadButton.Size = new System.Drawing.Size(100, 35);
+            this.ReloadButton.TabIndex = 9;
+            this.ReloadButton.Text = "Reload";
+            this.ReloadButton.UseVisualStyleBackColor = true;
+            this.ReloadButton.Click += new System.EventHandler(this.ReloadButton_Click);
             // 
             // Crud
             // 

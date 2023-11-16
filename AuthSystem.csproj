@@ -73,6 +73,12 @@
     <Compile Include="Component\Field.Designer.cs">
       <DependentUpon>Field.cs</DependentUpon>
     </Compile>
+    <Compile Include="Component\NumericField.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Component\NumericField.Designer.cs">
+      <DependentUpon>NumericField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Component\TextField.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -215,6 +221,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Component\Field.resx">
       <DependentUpon>Field.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Component\NumericField.resx">
+      <DependentUpon>NumericField.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Component\TextField.resx">
       <DependentUpon>TextField.cs</DependentUpon>

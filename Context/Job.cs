@@ -31,5 +31,10 @@ namespace AuthSystem.Context
         public virtual ICollection<Employee> Employees { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Wage> Wages { get; set; }
+
+        public override string ToString()
+        {
+            return DisplayName;
+        }
     }
 }

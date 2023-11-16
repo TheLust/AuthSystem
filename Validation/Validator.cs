@@ -60,20 +60,46 @@ namespace AuthSystem
             }
         }
 
-        public static void Unique<T>(string field, object toValidate, List<T> entities, int? id)
+        public static void Unique<T>(string field, object toValidate, List<T> entities, object id)
         {
             T foundEntity = entities.FirstOrDefault(x => GenericUtils.GetPropertyValue(x, field).Equals(toValidate));
             if (foundEntity != null) 
             {
                 if (id != null)
                 {
-                    if (id != Convert.ToInt32(GenericUtils.GetPropertyValue(foundEntity, "Id")))
+                    if (!id.Equals(GenericUtils.GetPropertyValue(foundEntity, "Id")))
                     {
                         throw new ValidationException(AppConstant.GetExceptionMessage(field, AppConstant.ALREADY_EXISTS));
                     }
                     return;
                 }
                 throw new ValidationException(AppConstant.GetExceptionMessage(field, AppConstant.ALREADY_EXISTS));
+            }
+        }
+
+        public static void Min(string field, object toValidate, int? min)
+        {
+            if (min == null)
+            {
+                return;
+            }
+
+            if (Convert.ToInt32(toValidate) < min)
+            {
+                throw new ValidationException(AppConstant.GetExceptionMessage(field, AppConstant.MIN_VALUE(min.Value)));
+            }
+        }
+
+        public static void Max(string field, object toValidate, int? max)
+        {
+            if (max == null)
+            {
+                return;
+            }
+
+            if (Convert.ToInt32(toValidate) > max)
+            {
+                throw new ValidationException(AppConstant.GetExceptionMessage(field, AppConstant.MAX_VALUE(max.Value)));
             }
         }
     }

@@ -32,10 +32,10 @@ namespace AuthSystem.View
         private void LoadCrud()
         {
             Crud<Employee> crud = new Crud<Employee>();
-            crud.Fields = new Dictionary<string, string>
+            crud.Fields = new List<string>()
             {
-                { "Account", "Username" },
-                { "Job", "DisplayName" }
+                "Account",
+                "Job"
             };
             crud.FieldReferences = new Dictionary<string, string>
             {

@@ -25,5 +25,10 @@ namespace AuthSystem.Context
     
         public virtual Role Role { get; set; }
         public virtual Employee Employee { get; set; }
+
+        public override string ToString()
+        {
+            return Username;
+        }
     }
 }

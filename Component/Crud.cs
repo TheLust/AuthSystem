@@ -48,7 +48,7 @@ namespace AuthSystem.Component
          * 
          * **/
 
-        public Dictionary<string, string> Fields { get; set; }
+        public List<string> Fields { get; set; }
 
         /*
          * FieldReferences represents the id of the object field references to
@@ -87,15 +87,11 @@ namespace AuthSystem.Component
             foreach (var field in Fields)
             {
                 DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
-                column.Name = field.Key;
-                column.HeaderText = field.Key;
+                column.Name = field;
+                column.HeaderText = field;
                 column.ReadOnly = true;
-                column.DataPropertyName = field.Key;
-
-                if (field.Value != null)
-                {
-                    column.DataPropertyName = field.Key + "." + field.Value;
-                }
+                column.DataPropertyName = field;
+                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
                 Grid.Columns.Add(column);
                 SetGridDataSource();
@@ -104,6 +100,8 @@ namespace AuthSystem.Component
 
         private void SetGridDataSource()
         {
+            Grid.DataSource = null;
+            Grid.Rows.Clear();
             Grid.DataSource = FindAllOperation();
         }
 
@@ -113,26 +111,6 @@ namespace AuthSystem.Component
             FillForm(SelectedEntity);
             UpdateButton.Enabled = true;
             DeleteButton.Enabled = true;
-        }
-
-        private void Grid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-
-            DataGridView grid = (DataGridView)sender;
-            DataGridViewRow row = grid.Rows[e.RowIndex];
-            DataGridViewColumn col = grid.Columns[e.ColumnIndex];
-            if (row.DataBoundItem != null && col.DataPropertyName.Contains("."))
-            {
-                string[] props = col.DataPropertyName.Split('.');
-                PropertyInfo propInfo = row.DataBoundItem.GetType().GetProperty(props[0]);
-                object val = propInfo.GetValue(row.DataBoundItem, null);
-                for (int i = 1; i < props.Length; i++)
-                {
-                    propInfo = val.GetType().GetProperty(props[i]);
-                    val = propInfo.GetValue(val, null);
-                }
-                e.Value = val;
-            }
         }
 
         // Form
@@ -152,11 +130,58 @@ namespace AuthSystem.Component
         {
             foreach (var field in Fields)
             {
-                if (field.Value == null)
+                PropertyInfo property = typeof(T).GetProperty(field);
+                if (property.PropertyType == typeof(string))
                 {
-                    // Generate field depending of type
+                    Form.Controls.Add(GenerateTextField(property));
+                }
+
+                if (property.PropertyType == typeof(double))
+                {
+                    Form.Controls.Add(GenerateNumericField(property));
                 }
             }
+        }
+
+        private TextField GenerateTextField(PropertyInfo property)
+        {
+            TextField field = new TextField
+            {
+                Name = property.Name,
+                Label = property.Name,
+                Enabled = false
+            };
+
+            if (FieldConstraints.ContainsKey(property.Name))
+            {
+                field.NotBlank = FieldConstraints[property.Name].NotBlank;
+                field.Email = FieldConstraints[property.Name].Email;
+                field.Length = FieldConstraints[property.Name].Length;
+                field.Min = FieldConstraints[property.Name].Min;
+                field.Max = FieldConstraints[property.Name].Max;
+                field.Pattern = FieldConstraints[property.Name].Pattern;
+                field.PatternMessage = FieldConstraints[property.Name].PatternMessage;
+            }
+
+            return field;
+        }
+
+        private NumericField GenerateNumericField(PropertyInfo property)
+        {
+            NumericField field = new NumericField
+            {
+                Name = property.Name,
+                Label = property.Name,
+                Enabled = false
+            };
+
+            if (FieldConstraints.ContainsKey(property.Name))
+            {
+                field.Min = FieldConstraints[property.Name].Min;
+                field.Max = FieldConstraints[property.Name].Max;
+            }
+
+            return field;
         }
 
         public void AddField<G>(Func<List<G>> findAll, string value, string display)
@@ -194,13 +219,11 @@ namespace AuthSystem.Component
             foreach (var field in Fields)
             {
                 GenericUtils.SetPropertyValue(
-                    Form.Controls[field.Key],
+                    Form.Controls[field],
                     "FieldValue",
                     GenericUtils.GetPropertyValue(
-                        entity, (field.Value == null ? field.Key : 
-                            (GenericUtils.HasProperty<T>(field.Key + "Id") ? (field.Key + "Id") :
-                                (FieldReferences != null && FieldReferences.ContainsKey(field.Key) ? FieldReferences[field.Key] : 
-                                    throw new Exception($"Reference for field '{field.Key}' is required")))))
+                        entity, (GenericUtils.HasProperty<T>(field + "Id") ? (field + "Id") :
+                                    (FieldReferences != null && FieldReferences.ContainsKey(field) ? FieldReferences[field] : field)))
                 );
             }
         }
@@ -215,12 +238,10 @@ namespace AuthSystem.Component
                 try {
                     GenericUtils.SetPropertyValue(
                         entity,
-                        (field.Value == null ? field.Key :
-                            (GenericUtils.HasProperty<T>(field.Key + "Id") ? (field.Key + "Id") :
-                                (FieldReferences != null && FieldReferences.ContainsKey(field.Key) ? FieldReferences[field.Key] :
-                                    throw new Exception($"Reference for field '{field.Key}' is required")))),
+                        (GenericUtils.HasProperty<T>(field + "Id") ? (field + "Id") :
+                            (FieldReferences != null && FieldReferences.ContainsKey(field) ? FieldReferences[field] : field)),
                         GenericUtils.GetPropertyValue(
-                            Form.Controls[field.Key] ??
+                            Form.Controls[field] ??
                                 throw new Exception("Field not found, please add it manually"),
                             "FieldValue")
                     );
@@ -287,17 +308,15 @@ namespace AuthSystem.Component
                 T entity = GetEntityFromForm();
                 bool unique = true;
                 foreach(var field in FieldConstraints.Where(x => x.Value.Unique)) {
-                    string find = (field.Value == null ? field.Key :
-                                    (GenericUtils.HasProperty<T>(field.Key + "Id") ? (field.Key + "Id") :
-                                        (FieldReferences != null && FieldReferences.ContainsKey(field.Key) ? FieldReferences[field.Key] :
-                                            throw new Exception($"Reference for field '{field.Key}' is required"))));
+                    string find = (GenericUtils.HasProperty<T>(field.Key + "Id") ? (field.Key + "Id") :
+                                    (FieldReferences != null && FieldReferences.ContainsKey(field.Key) ? FieldReferences[field.Key] : field.Key));
                     try
                     {
                         Validator.Unique(find, GenericUtils.GetPropertyValue(entity, find), FindAllOperation(), null);
                     }
                     catch (ValidationException)
                     {
-                        ((Field)Form.Controls[field.Key]).Error = AppConstant.GetExceptionMessage(AppConstant.EMPLOYEE.Item1, field.Key, AppConstant.ALREADY_EXISTS);
+                        ((Field)Form.Controls[field.Key]).Error = AppConstant.GetExceptionMessage(typeof(T).Name, field.Key, AppConstant.ALREADY_EXISTS);
                         unique = false;
                     }
                 }
@@ -313,6 +332,10 @@ namespace AuthSystem.Component
                 return;
             }
 
+            SelectedEntity = default;
+            UpdateButton.Enabled = false;
+            DeleteButton.Enabled = false;
+            ViewMode();
             SetGridDataSource();
         }
 
@@ -331,7 +354,42 @@ namespace AuthSystem.Component
 
         private void UpdateSaveButton_Click(object sender, EventArgs e)
         {
-            
+            try
+            {
+                T entity = GetEntityFromForm();
+                bool unique = true;
+                foreach (var field in FieldConstraints.Where(x => x.Value.Unique))
+                {
+                    string find = (GenericUtils.HasProperty<T>(field.Key + "Id") ? (field.Key + "Id") :
+                                    (FieldReferences != null && FieldReferences.ContainsKey(field.Key) ? FieldReferences[field.Key] : field.Key));
+                    try
+                    {
+                        Validator.Unique(find, GenericUtils.GetPropertyValue(entity, find), FindAllOperation(), GenericUtils.GetPropertyValue(SelectedEntity, "Id"));
+                    }
+                    catch (ValidationException)
+                    {
+                        ((Field)Form.Controls[field.Key]).Error = AppConstant.GetExceptionMessage(typeof(T).Name, field.Key, AppConstant.ALREADY_EXISTS);
+                        unique = false;
+                    }
+                }
+
+                if (!unique)
+                {
+                    throw new ValidationException("One or more fields are not unique");
+                }
+
+                UpdateOperation(Convert.ToInt32(GenericUtils.GetPropertyValue(SelectedEntity, "Id")), entity);
+            }
+            catch (ValidationException)
+            {
+                return;
+            }
+
+            SelectedEntity = default;
+            UpdateButton.Enabled = false;
+            DeleteButton.Enabled = false;
+            ViewMode();
+            SetGridDataSource();
         }
 
         private void UpdateCancelButton_Click(object sender, EventArgs e)
@@ -353,6 +411,10 @@ namespace AuthSystem.Component
                 }
             }
 
+            SelectedEntity = default;
+            UpdateButton.Enabled = false;
+            DeleteButton.Enabled = true;
+            ViewMode();
             SetGridDataSource();
         }
     }

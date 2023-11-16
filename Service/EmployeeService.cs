@@ -3,6 +3,7 @@ using AuthSystem.Security;
 using AuthSystem.Util.Constants;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace AuthSystem.Service
 
         public List<Employee> FindAll()
         {
-            return context.Employees.ToList();
+            return context.Employees.Include(e => e.Account).Include(e => e.Job).ToList();
         }
 
         public Employee FindById(int id)
@@ -50,6 +51,7 @@ namespace AuthSystem.Service
                 throw new Exception(AppConstant.GetExceptionMessage("Employee", "id", AppConstant.NOT_FOUND));
             }
 
+            existingEmployee.Id = employee.Id;
             existingEmployee.JobId = employee.JobId;
             context.SaveChanges();
         }

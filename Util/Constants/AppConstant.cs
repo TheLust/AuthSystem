@@ -23,6 +23,14 @@ namespace AuthSystem.Util.Constants
         {
             return  " must have less than " + max + " characters";
         }
+        public static string MIN_VALUE(int min)
+        {
+            return " must be greater than " + min;
+        }
+        public static string MAX_VALUE(int max)
+        {
+            return " must be less than " + max;
+        }
 
         public const string WELCOME = "Ciao cacao, ";
         public const string ADMIN = "Admin";
