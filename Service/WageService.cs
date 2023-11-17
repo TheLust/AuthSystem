@@ -19,6 +19,11 @@ namespace AuthSystem.Service
             context = new AuthSystemEntities();
         }
 
+        public List<Wage> FindAllIncludingDefaults()
+        {
+            return context.Wages.Include(e => e.Job).Include(e => e.Project).ToList();
+        }
+
         public List<Wage> FindAll()
         {
             return context.Wages.Include(e => e.Job).Include(e => e.Project).Where(w => w.ProjectId != null).ToList();

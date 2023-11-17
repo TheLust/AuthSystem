@@ -205,6 +205,12 @@
     <Compile Include="View\MyHub.Designer.cs">
       <DependentUpon>MyHub.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\MySalary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\MySalary.Designer.cs">
+      <DependentUpon>MySalary.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Projects.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -274,6 +280,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\MyHub.resx">
       <DependentUpon>MyHub.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\MySalary.resx">
+      <DependentUpon>MySalary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Projects.resx">
       <DependentUpon>Projects.cs</DependentUpon>

@@ -43,6 +43,17 @@ namespace AuthSystem.View
 
             ToolStripItem myHub = Menu.Items.Add(AppConstant.SESSION.Item2);
             myHub.Click += MyHubLink_Click;
+
+            ToolStripItem mySalary = Menu.Items.Add("My Salary");
+            mySalary.Click += MySalary_Click;
+        }
+
+        private void MySalary_Click(object sender, System.EventArgs e)
+        {
+            MySalary mySalaryView = new MySalary(account);
+            Hide();
+            mySalaryView.ShowDialog();
+            Show();
         }
 
         private void MyHubLink_Click(object sender, System.EventArgs e)
