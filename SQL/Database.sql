@@ -150,6 +150,36 @@ END;
 
 GO
 
+CREATE TRIGGER PreventUpdateWage
+ON Wage
+INSTEAD OF UPDATE
+AS
+BEGIN
+    IF UPDATE(ProjectId)
+    BEGIN
+        IF EXISTS (
+            SELECT 1
+            FROM inserted i
+            INNER JOIN deleted d ON i.Id = d.Id
+            WHERE i.ProjectId IS NOT NULL AND d.ProjectId IS NULL
+        )
+        BEGIN
+            PRINT'Updating ProjectId from NULL to a different value is not allowed.';
+        END
+        ELSE
+        BEGIN
+            UPDATE Wage
+            SET 
+                JobId = i.JobId,
+                Amount = i.Amount
+            FROM inserted i
+            WHERE Wage.Id = i.Id;
+        END
+    END
+END;
+
+GO
+
 CREATE TRIGGER BonusAchievementCheck
 ON ExtraPayment
 AFTER INSERT

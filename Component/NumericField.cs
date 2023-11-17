@@ -23,20 +23,20 @@ namespace AuthSystem.Component
             Category("Validation"),
             Description("Field min value")
         ]
-        public int? Min { get { return Convert.ToInt32(FieldNumeric.Minimum); } set { FieldNumeric.Minimum = Convert.ToDecimal(value); } }
+        public long Min { get { return Convert.ToInt32(FieldNumeric.Minimum); } set { FieldNumeric.Minimum = Convert.ToDecimal(value); } }
 
         [
             Category("Validation"),
             Description("Field max value")
         ]
-        public int? Max { get { return Convert.ToInt32(FieldNumeric.Maximum); } set { FieldNumeric.Maximum = Convert.ToDecimal(value); } }
+        public long Max { get { return Convert.ToInt32(FieldNumeric.Maximum); } set { FieldNumeric.Maximum = Convert.ToDecimal(value); } }
 
         public object FieldValue
         {
             get
             {
                 return ValidateField(FieldNumeric.Value) ?
-                (object)Convert.ToInt32(FieldNumeric.Value) : new ValidationException(AppConstant.VALIDATION_ERROR_MESSAGE);
+                (object)Convert.ToInt64(FieldNumeric.Value) : new ValidationException(AppConstant.VALIDATION_ERROR_MESSAGE);
             }
             set
             {
@@ -48,16 +48,8 @@ namespace AuthSystem.Component
         {
             try
             {
-
-                if (Min.HasValue)
-                {
-                    Validator.Min(Label, toValidate, Min);
-                }
-
-                if (Max.HasValue)
-                {
-                    Validator.Max(Label, toValidate, Max);
-                }
+                Validator.Min(Label, toValidate, Min);
+                Validator.Max(Label, toValidate, Max);
             }
             catch (ValidationException e)
             {

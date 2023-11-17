@@ -1,4 +1,5 @@
-﻿using AuthSystem.Util;
+﻿using AuthSystem.Component;
+using AuthSystem.Util;
 using AuthSystem.Util.Constants;
 using System;
 using System.Collections.Generic;
@@ -77,29 +78,35 @@ namespace AuthSystem
             }
         }
 
-        public static void Min(string field, object toValidate, int? min)
+        public static void Min(string field, object toValidate, long min)
         {
-            if (min == null)
+            if (Convert.ToInt64(toValidate) < min)
             {
-                return;
-            }
-
-            if (Convert.ToInt32(toValidate) < min)
-            {
-                throw new ValidationException(AppConstant.GetExceptionMessage(field, AppConstant.MIN_VALUE(min.Value)));
+                throw new ValidationException(AppConstant.GetExceptionMessage(field, AppConstant.MIN_VALUE(min)));
             }
         }
 
-        public static void Max(string field, object toValidate, int? max)
+        public static void Max(string field, object toValidate, long max)
         {
-            if (max == null)
+            if (Convert.ToInt64(toValidate) > max)
             {
-                return;
+                throw new ValidationException(AppConstant.GetExceptionMessage(field, AppConstant.MAX_VALUE(max)));
             }
+        }
 
-            if (Convert.ToInt32(toValidate) > max)
+        public static void PastOrPresent(string field, object toValidate)
+        {
+            if (Convert.ToDateTime(toValidate).CompareTo(DateTime.Now) >= 0)
             {
-                throw new ValidationException(AppConstant.GetExceptionMessage(field, AppConstant.MAX_VALUE(max.Value)));
+                throw new ValidationException(AppConstant.GetExceptionMessage(field, AppConstant.PAST_OR_PRESENT));
+            }
+        }
+
+        public static void IsLaterThan(string field, object toValidate, DateTimeField target)
+        {
+            if (Convert.ToDateTime(toValidate).CompareTo(target.FieldValue) < 0)
+            {
+                throw new ValidationException(AppConstant.GetExceptionMessage(field, AppConstant.LATER(target.Label)));
             }
         }
     }

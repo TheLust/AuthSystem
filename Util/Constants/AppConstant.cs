@@ -23,14 +23,23 @@ namespace AuthSystem.Util.Constants
         {
             return  " must have less than " + max + " characters";
         }
-        public static string MIN_VALUE(int min)
+        public static string MIN_VALUE(long min)
         {
             return " must be greater than " + min;
         }
-        public static string MAX_VALUE(int max)
+        public static string MAX_VALUE(long max)
         {
             return " must be less than " + max;
         }
+        public static string EARLIER(string dateTime)
+        {
+            return " must be earlier than " + dateTime;
+        }
+        public static string LATER(string dateTime)
+        {
+            return " must be later than " + dateTime;
+        }
+        public const string PAST_OR_PRESENT = " must be in the past or present";
 
         public const string WELCOME = "Ciao cacao, ";
         public const string ADMIN = "Admin";

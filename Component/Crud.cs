@@ -2,15 +2,10 @@
 using AuthSystem.Util.Constants;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.Entity.Infrastructure;
-using System.Data.SqlClient;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AuthSystem.Component
@@ -130,15 +125,23 @@ namespace AuthSystem.Component
         {
             foreach (var field in Fields)
             {
-                PropertyInfo property = typeof(T).GetProperty(field);
-                if (property.PropertyType == typeof(string))
+                if (!Form.Controls.ContainsKey(field))
                 {
-                    Form.Controls.Add(GenerateTextField(property));
-                }
+                    PropertyInfo property = typeof(T).GetProperty(field);
+                    if (property.PropertyType == typeof(string))
+                    {
+                        Form.Controls.Add(GenerateTextField(property));
+                    }
 
-                if (property.PropertyType == typeof(double))
-                {
-                    Form.Controls.Add(GenerateNumericField(property));
+                    if (property.PropertyType == typeof(double) || property.PropertyType == typeof(int) || property.PropertyType == typeof(long))
+                    {
+                        Form.Controls.Add(GenerateNumericField(property));
+                    }
+
+                    if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
+                    {
+                        Form.Controls.Add(GenerateDateTimeField(property));
+                    }
                 }
             }
         }
@@ -180,6 +183,26 @@ namespace AuthSystem.Component
                 field.Min = FieldConstraints[property.Name].Min;
                 field.Max = FieldConstraints[property.Name].Max;
             }
+
+            return field;
+        }
+
+        private DateTimeField GenerateDateTimeField(PropertyInfo property)
+        {
+            DateTimeField field = new DateTimeField
+            {
+                Name = property.Name,
+                Label = property.Name,
+                Enabled = false
+            };
+
+            if (FieldConstraints.ContainsKey(property.Name))
+            {
+                field.PastOrPresent = FieldConstraints[property.Name].PastOrPresent;
+                field.IsLaterThan = FieldConstraints[property.Name].IsLaterThan != null ? 
+                    (Form.Controls[FieldConstraints[property.Name].IsLaterThan] as DateTimeField) : null;
+            }
+
 
             return field;
         }
@@ -282,6 +305,8 @@ namespace AuthSystem.Component
             AddButton.Visible = true;
             UpdateButton.Visible = true;
             DeleteButton.Visible = true;
+
+            Grid.CellDoubleClick += Grid_CellDoubleClick;
         }
 
         // Events
@@ -299,6 +324,8 @@ namespace AuthSystem.Component
             FormEnabled = true;
             AddSaveButton.Visible = true;
             AddCancelButton.Visible = true;
+
+            Grid.CellDoubleClick -= Grid_CellDoubleClick;
         }
 
         private void AddSaveButton_Click(object sender, EventArgs e)
@@ -307,7 +334,8 @@ namespace AuthSystem.Component
             {
                 T entity = GetEntityFromForm();
                 bool unique = true;
-                foreach(var field in FieldConstraints.Where(x => x.Value.Unique)) {
+                foreach (var field in FieldConstraints.Where(x => x.Value.Unique))
+                {
                     string find = (GenericUtils.HasProperty<T>(field.Key + "Id") ? (field.Key + "Id") :
                                     (FieldReferences != null && FieldReferences.ContainsKey(field.Key) ? FieldReferences[field.Key] : field.Key));
                     try
@@ -328,7 +356,13 @@ namespace AuthSystem.Component
 
                 AddOperation(entity);
             }
-            catch (ValidationException) {
+            catch (ValidationException)
+            {
+                return;
+            }
+            catch (MissingFieldException ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
                 return;
             }
 
@@ -350,6 +384,8 @@ namespace AuthSystem.Component
             FormEnabled = true;
             UpdateSaveButton.Visible = true;
             UpdateCancelButton.Visible = true;
+
+            Grid.CellDoubleClick -= Grid_CellDoubleClick;
         }
 
         private void UpdateSaveButton_Click(object sender, EventArgs e)
@@ -413,7 +449,7 @@ namespace AuthSystem.Component
 
             SelectedEntity = default;
             UpdateButton.Enabled = false;
-            DeleteButton.Enabled = true;
+            DeleteButton.Enabled = false;
             ViewMode();
             SetGridDataSource();
         }

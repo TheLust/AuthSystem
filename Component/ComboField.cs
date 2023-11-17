@@ -37,7 +37,14 @@ namespace AuthSystem.Component
             }
             set 
             { 
-                FieldComboBox.SelectedValue = value; 
+                if (value != null)
+                {
+                    FieldComboBox.SelectedValue = value;
+                }
+                else
+                {
+                    FieldComboBox.SelectedItem = null;
+                }
             }
         }
 

@@ -30,5 +30,10 @@ namespace AuthSystem.Context
         public virtual Job Job { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ExtraPayment> ExtraPayments { get; set; }
+
+        public override string ToString()
+        {
+            return Account.ToString();
+        }
     }
 }

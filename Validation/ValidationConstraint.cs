@@ -18,6 +18,11 @@ namespace AuthSystem
         public string Pattern { get; set; }
         public string PatternMessage { get; set; }
 
+        // DateTime
+
+        public bool PastOrPresent { get; set; }
+        public string IsLaterThan { get; set; }
+
         public ValidationConstraint()
         {
         }

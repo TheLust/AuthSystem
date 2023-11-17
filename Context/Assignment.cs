@@ -23,10 +23,16 @@ namespace AuthSystem.Context
         public int Id { get; set; }
         public int EmployeeId { get; set; }
         public int ProjectId { get; set; }
-    
+        public string DisplayName { get { return Employee.ToString() + " - " + Project.ToString(); } }
+
         public virtual Employee Employee { get; set; }
         public virtual Project Project { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Session> Sessions { get; set; }
+
+        public override string ToString()
+        {
+            return DisplayName;
+        }
     }
 }

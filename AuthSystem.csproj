@@ -67,6 +67,12 @@
     <Compile Include="Component\Crud.Designer.cs">
       <DependentUpon>Crud.cs</DependentUpon>
     </Compile>
+    <Compile Include="Component\DateTimeField.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Component\DateTimeField.Designer.cs">
+      <DependentUpon>DateTimeField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Component\Field.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -130,6 +136,10 @@
     <Compile Include="Facade\AuthFacade.cs" />
     <Compile Include="Security\SecurityService.cs" />
     <Compile Include="Service\AccountService.cs" />
+    <Compile Include="Service\BonusService.cs" />
+    <Compile Include="Service\WageService.cs" />
+    <Compile Include="Service\AssignmentService.cs" />
+    <Compile Include="Service\SessionService.cs" />
     <Compile Include="Service\EmployeeService.cs" />
     <Compile Include="Service\ProjectService.cs" />
     <Compile Include="Service\JobService.cs" />
@@ -218,6 +228,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Component\Crud.resx">
       <DependentUpon>Crud.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Component\DateTimeField.resx">
+      <DependentUpon>DateTimeField.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Component\Field.resx">
       <DependentUpon>Field.cs</DependentUpon>

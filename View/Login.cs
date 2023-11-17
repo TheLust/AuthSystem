@@ -16,8 +16,8 @@ namespace AuthSystem
         {
             authFacade = new AuthFacade();
             InitializeComponent();
-            Jobs employees = new Jobs();
-            employees.ShowDialog();
+            /*Bonuses employees = new Bonuses();
+            employees.ShowDialog();*/
         }
 
         private void LoginButton_Click(object sender, EventArgs e)

@@ -24,6 +24,37 @@ namespace AuthSystem.View
             LoadCrud();
         }
 
+        public class Rank
+        {
+            public string Name { get; set; }
+            public string DisplayName 
+            { 
+                get 
+                {
+                    return Name[0] + Name.Substring(1).ToLower();
+                } 
+            }
+        }
+
+        public List<Rank> GetRanks()
+        {
+            return new List<Rank>()
+            {
+                new Rank()
+                {
+                    Name = "JUNIOR"
+                },
+                new Rank()
+                {
+                    Name = "MIDDLE"
+                },
+                new Rank()
+                {
+                    Name = "SENIOR"
+                }
+            };
+        }
+
         private void LoadCrud()
         {
             Crud<Job> crud = new Crud<Job>();
@@ -51,14 +82,25 @@ namespace AuthSystem.View
                     "Rank",
                     new ValidationConstraint()
                     {
-
+                        NotNull = true
+                    }
+                },
+                {
+                    "BaseSalary",
+                    new ValidationConstraint()
+                    {
+                        Min = 0,
+                        Max = 10000
                     }
                 }
             };
+
             crud.FindAllOperation = jobService.FindAll;
             crud.AddOperation = jobService.Add;
             crud.UpdateOperation = jobService.Update;
             crud.DeleteOperation = jobService.Remove;
+
+            crud.AddField(GetRanks, "Name", "DisplayName");
 
             Controls.Add(crud);
         }
