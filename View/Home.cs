@@ -40,6 +40,17 @@ namespace AuthSystem.View
 
             ToolStripItem myAccount = Menu.Items.Add(AppConstant.MY_ACCOUNT);
             myAccount.Click += MyAccount_Click;
+
+            ToolStripItem myHub = Menu.Items.Add(AppConstant.SESSION.Item2);
+            myHub.Click += MyHubLink_Click;
+        }
+
+        private void MyHubLink_Click(object sender, System.EventArgs e)
+        {
+            MyHub myHubView = new MyHub(account);
+            Hide();
+            myHubView.ShowDialog();
+            Show();
         }
 
         private void SessionLink_Click(object sender, System.EventArgs e)

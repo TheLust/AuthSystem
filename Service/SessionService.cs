@@ -24,6 +24,11 @@ namespace AuthSystem.Service
             return context.Sessions.Include(e => e.Assignment).ToList();
         }
 
+        public List<Session> FindSessionsByAccount(Account account)
+        {
+            return FindAll().Where(s => s.Assignment.EmployeeId == account.Id).ToList();
+        }
+
         public Session FindById(int id)
         {
             Session session = context.Sessions.Find(id);
