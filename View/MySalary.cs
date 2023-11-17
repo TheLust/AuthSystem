@@ -17,12 +17,14 @@ namespace AuthSystem.View
         private SessionService sessionService;
         private EmployeeService employeeService;
         private WageService wageService;
+        private BonusService bonusService;
         private Account account;
         public MySalary(Account account)
         {
             sessionService = new SessionService();
             employeeService = new EmployeeService();
             wageService = new WageService();
+            bonusService = new BonusService();
             this.account = account;
             InitializeComponent();
         }
@@ -46,23 +48,80 @@ namespace AuthSystem.View
                                          group session by new { session.Start.Year, session.Start.Month, session.Assignment.Project } into grouped
                                          select new
                                          {
-                                             Year = grouped.Key.Year,
-                                             Month = grouped.Key.Month,
-                                             Project = grouped.Key.Project,
+                                             grouped.Key.Year,
+                                             grouped.Key.Month,
+                                             grouped.Key.Project,
                                              Duration = grouped.Sum(s => (s.End - s.Start).Value.TotalHours)
                                          }).ToList();
 
-            Employee employee = employeeService.FindById(account.Id);
+            Employee employee;
+            try
+            {
+                employee = employeeService.FindById(account.Id);
+            } catch (Exception) 
+            {
+                MessageBox.Show("Please contact an admin to create you an employee account", "Error");
+                this.Close();
+                return;
+            }
 
-            Grid.DataSource = (from record in workedHoursAtProjects
-                               select new
-                               {
-                                   record.Year,
-                                   record.Month,
-                                   record.Project,
-                                   record.Duration,
-                                   Earned = CalculateSalary(record.Duration, employee.JobId, record.Project.Id)
-                               }).ToList();
+            var moneyFormProjects =  (from record in workedHoursAtProjects
+                                      select new
+                                      {
+                                          record.Year,
+                                          record.Month,
+                                          record.Project,
+                                          record.Duration,
+                                          Earned = CalculateSalary(record.Duration, employee.JobId, record.Project.Id)
+                                      }).ToList();
+            Grid.DataSource = moneyFormProjects;
+
+            var bonuses = (from bonus in bonusService.FindAll().Where(b => b.EmployeeId == account.Id).ToList()
+                           select new
+                           {
+                               bonus.Type,
+                               bonus.Amount,
+                               bonus.Month,
+                               bonus.Achievement
+                           }).ToList();
+            BonusGrid.DataSource = bonuses;
+
+            var total = (from record in moneyFormProjects
+                         group record by new { record.Year, record.Month } into grouped
+                         select new
+                         {
+                             grouped.Key.Year,
+                             grouped.Key.Month,
+                             FromProjects =  grouped.Sum(s => s.Earned),
+                             employee.Job.BaseSalary,
+                             Bonus = bonuses.Sum(b =>
+                             {
+                                 if (b.Type.Equals("MONTHLY"))
+                                 {
+                                     return b.Amount;
+                                 }
+                                 else if (b.Type.Equals("PRIZE"))
+                                 {
+                                     if (b.Month.Value.Year == grouped.Key.Year && b.Month.Value.Month == grouped.Key.Month)
+                                     {
+                                         return b.Amount;
+                                     }
+                                 }
+
+                                 return 0;
+                             })
+                         }).ToList();
+
+            SalaryGrid.DataSource = (from gigel in total
+                                     select new
+                                     {
+                                         gigel.Year,
+                                         gigel.Month,
+                                         gigel.FromProjects,
+                                         gigel.BaseSalary,
+                                         gigel.Bonus,
+                                         Total = (gigel.FromProjects + gigel.BaseSalary + gigel.Bonus)
+                                     }).ToList();
         }
 
         private void MySalary_Load(object sender, EventArgs e)

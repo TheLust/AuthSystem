@@ -67,7 +67,14 @@ namespace AuthSystem.View
             crud.FieldConstraints = new Dictionary<string, ValidationConstraint>
             {
                 {
-                    "Job",
+                    "Employee",
+                    new ValidationConstraint()
+                    {
+                        NotNull = true
+                    }
+                },
+                {
+                    "Type",
                     new ValidationConstraint()
                     {
                         NotNull = true
